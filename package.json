@@ -6,7 +6,7 @@
     "mxcins-tools": "./bin/mxcins-tools.js"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "prepublishOnly": "np --no-cleanup --yolo --no-publish"
   },
   "dependencies": {
     "@babel/core": "7.2.2",
@@ -44,5 +44,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "ca090e345f12c86eec7b4c5b24ffb1caf24a112d"
+  "gitHead": "ca090e345f12c86eec7b4c5b24ffb1caf24a112d",
+  "devDependencies": {
+    "np": "^4.0.2"
+  }
 }
