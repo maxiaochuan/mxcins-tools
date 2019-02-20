@@ -7,6 +7,11 @@ module.exports = new Signale({
       color: 'blue',
       label: 'transform',
     },
+    copy: {
+      badge: '🎅',
+      color: 'red',
+      label: 'copy',
+    },
     pending: {
       badge: '++',
       color: 'magenta',

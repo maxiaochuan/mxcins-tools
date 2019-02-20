@@ -1,5 +1,5 @@
 const { join, extname } = require('path');
-const { existsSync, readdirSync } = require('fs');
+const { existsSync, readdirSync, statSync } = require('fs');
 const yParser = require('yargs-parser');
 const babel = require('@babel/core');
 const through = require('through2');
@@ -36,13 +36,18 @@ function getBabelConfig(isBrowser) {
     ],
     plugins: [
       require.resolve('@babel/plugin-proposal-export-default-from'),
-      require.resolve('@babel/plugin-proposal-class-properties'),
       ...(isBrowser
         ? [
-            [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
-            [(require.resolve('@babel/plugin-proposal-class-properties'), { loose: true })],
+    [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
+    [
+      require.resolve('@babel/plugin-proposal-class-properties'),
+      { loose: true },
+    ],
           ]
-        : []),
+        : [
+
+      require.resolve('@babel/plugin-proposal-class-properties'),
+        ]),
     ],
   };
 }
@@ -52,16 +57,11 @@ function addLastSlash(path) {
 }
 
 function transform(opts = {}) {
-  const { content, path, browserFiles, root } = opts;
+  const { content, path, isBrowser, root } = opts;
 
-  const isBrowser =
-    opts.isBrowser ||
-    (browserFiles &&
-      browserFiles.includes(slash(path).replace(`${addLastSlash(slash(root))}`, '')));
 
   const babelConfig = getBabelConfig(isBrowser);
 
-  log.transform(chalk[isBrowser ? 'yellow' : 'blue'](`${slash(path).replace(`${cwd}/`, '')}`));
   return babel.transform(content, {
     ...babelConfig,
     filename: path,
@@ -91,20 +91,37 @@ function build(dir) {
 
   function createStream(src) {
     return vfs
-      .src([src], { allowEmpty: true, base: srcDir })
+      .src(
+        [
+          src,
+          `!${join(srcDir, '**/fixtures/**/*')}`,
+          `!${join(srcDir, '**/.umi/**/*')}`,
+          `!${join(srcDir, '**/.umi-production/**/*')}`,
+          `!${join(srcDir, '**/*.test.js')}`,
+          `!${join(srcDir, '**/*.e2e.js')}`,
+        ],
+        { allowEmpty: true, base: srcDir },
+      )
       .pipe(
         through.obj((f, env, cb) => {
-          if (['.js', '.ts'].includes(extname(f.path))) {
+          if (f.path.includes('templates')) {
+            log.copy(chalk.red(`${slash(f.path).replace(`${cwd}/`, '')}`));
+          }
+          else if (['.js', '.ts'].includes(extname(f.path))) {
+            const isBrowserFile =
+              isBrowser ||
+              (browserFiles &&
+                browserFiles.includes(`${slash(f.path).replace(`${cwd}/`, '')}`));
             const transformed = transform({
               content: f.contents,
-              isBrowser,
-              browserFiles,
+              isBrowser: isBrowserFile,
               path: f.path,
               root: join(cwd, dir),
             });
             f.contents = Buffer.from(transformed.code);
             f.path = f.path.replace(extname(f.path), '.js');
             f.map = transformed.map;
+            log.transform(chalk[isBrowserFile ? 'yellow' : 'blue'](`${slash(f.path).replace(`${cwd}/`, '')}`));
           }
           cb(null, f);
         }),
