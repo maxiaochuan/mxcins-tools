@@ -28,7 +28,6 @@ function getBabelConfig(isBrowser) {
       };
 
   return {
-    // sourceType: 'unambiguous',
     sourceMaps: true,
     presets: [
       [require.resolve('@babel/preset-typescript'), {}],
@@ -38,6 +37,12 @@ function getBabelConfig(isBrowser) {
     plugins: [
       require.resolve('@babel/plugin-proposal-export-default-from'),
       require.resolve('@babel/plugin-proposal-class-properties'),
+      ...(isBrowser
+        ? [
+            [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
+            [(require.resolve('@babel/plugin-proposal-class-properties'), { loose: true })],
+          ]
+        : []),
     ],
   };
 }

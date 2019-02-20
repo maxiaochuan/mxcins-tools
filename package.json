@@ -6,12 +6,14 @@
     "mxcins-tools": "./bin/mxcins-tools.js"
   },
   "scripts": {
+    "prettier": "prettier --write \"./src/**/*\"",
     "prepublishOnly": "np --no-cleanup --yolo --no-publish"
   },
   "dependencies": {
     "@babel/core": "7.2.2",
-    "@babel/plugin-proposal-class-properties": "7.3.0",
-    "@babel/plugin-proposal-export-default-from": "7.2.0",
+    "@babel/plugin-proposal-class-properties": "^7.3.3",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "@babel/plugin-proposal-export-default-from": "^7.2.0",
     "@babel/preset-env": "7.3.1",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
@@ -46,6 +48,7 @@
   },
   "gitHead": "ca090e345f12c86eec7b4c5b24ffb1caf24a112d",
   "devDependencies": {
-    "np": "^4.0.2"
+    "np": "^4.0.2",
+    "prettier": "^1.16.4"
   }
 }
