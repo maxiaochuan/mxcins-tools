@@ -38,16 +38,10 @@ function getBabelConfig(isBrowser) {
       require.resolve('@babel/plugin-proposal-export-default-from'),
       ...(isBrowser
         ? [
-    [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
-    [
-      require.resolve('@babel/plugin-proposal-class-properties'),
-      { loose: true },
-    ],
+            [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
+            [require.resolve('@babel/plugin-proposal-class-properties'), { loose: true }],
           ]
-        : [
-
-      require.resolve('@babel/plugin-proposal-class-properties'),
-        ]),
+        : [require.resolve('@babel/plugin-proposal-class-properties')]),
     ],
   };
 }
@@ -58,7 +52,6 @@ function addLastSlash(path) {
 
 function transform(opts = {}) {
   const { content, path, isBrowser, root } = opts;
-
 
   const babelConfig = getBabelConfig(isBrowser);
 
@@ -106,12 +99,10 @@ function build(dir) {
         through.obj((f, env, cb) => {
           if (f.path.includes('templates')) {
             log.copy(chalk.red(`${slash(f.path).replace(`${cwd}/`, '')}`));
-          }
-          else if (['.js', '.ts'].includes(extname(f.path))) {
+          } else if (['.js', '.ts'].includes(extname(f.path))) {
             const isBrowserFile =
               isBrowser ||
-              (browserFiles &&
-                browserFiles.includes(`${slash(f.path).replace(`${cwd}/`, '')}`));
+              (browserFiles && browserFiles.includes(`${slash(f.path).replace(`${cwd}/`, '')}`));
             const transformed = transform({
               content: f.contents,
               isBrowser: isBrowserFile,
@@ -121,7 +112,9 @@ function build(dir) {
             f.contents = Buffer.from(transformed.code);
             f.path = f.path.replace(extname(f.path), '.js');
             f.map = transformed.map;
-            log.transform(chalk[isBrowserFile ? 'yellow' : 'blue'](`${slash(f.path).replace(`${cwd}/`, '')}`));
+            log.transform(
+              chalk[isBrowserFile ? 'yellow' : 'blue'](`${slash(f.path).replace(`${cwd}/`, '')}`),
+            );
           }
           cb(null, f);
         }),
