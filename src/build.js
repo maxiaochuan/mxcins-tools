@@ -16,7 +16,7 @@ let pkgCount = null;
 function getBabelConfig(isBrowser) {
   const options = isBrowser
     ? {
-        modules: false,
+        // modules: false,
         targets: {
           browsers: ['last 2 versions', 'IE 10'],
         },
