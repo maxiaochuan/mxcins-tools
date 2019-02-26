@@ -100,7 +100,7 @@ function build(dir) {
         through.obj((f, env, cb) => {
           if (f.path.includes('templates')) {
             log.copy(chalk.red(`${slash(f.path).replace(`${cwd}/`, '')}`));
-          } else if (['.js', '.ts'].includes(extname(f.path))) {
+          } else if (['.js', '.ts', '.tsx'].includes(extname(f.path))) {
             const isBrowserFile =
               isBrowser ||
               (browserFiles && browserFiles.includes(`${slash(f.path).replace(`${cwd}/`, '')}`));
