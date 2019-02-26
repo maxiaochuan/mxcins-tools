@@ -40,6 +40,7 @@ function getBabelConfig(isBrowser) {
         ? [
             [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
             [require.resolve('@babel/plugin-proposal-class-properties'), { loose: true }],
+            [require.resolve('@babel/plugin-transform-runtime'), { corejs: 2 }],
           ]
         : [require.resolve('@babel/plugin-proposal-class-properties')]),
     ],
