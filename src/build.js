@@ -52,7 +52,7 @@ function addLastSlash(path) {
 }
 
 function transform(opts = {}) {
-  const { content, path, isBrowser, root } = opts;
+  const { content, path, isBrowser } = opts;
 
   const babelConfig = getBabelConfig(isBrowser);
 
@@ -103,12 +103,11 @@ function build(dir) {
           } else if (['.js', '.ts', '.tsx'].includes(extname(f.path))) {
             const isBrowserFile =
               isBrowser ||
-              (browserFiles && browserFiles.includes(`${slash(f.path).replace(`${cwd}/`, '')}`));
+              (browserFiles && browserFiles.includes(`${slash(f.path).replace(`${join(cwd, dir)}/`, '')}`));
             const transformed = transform({
               content: f.contents,
               isBrowser: isBrowserFile,
               path: f.path,
-              root: join(cwd, dir),
             });
             f.contents = Buffer.from(transformed.code);
             f.path = f.path.replace(extname(f.path), '.js');
