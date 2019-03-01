@@ -69,6 +69,8 @@ function build(dir) {
     return;
   }
 
+  const root = join(cwd, dir).replace(/\/$/, '');
+
   const { browserFiles, isBrowser, types } = pkg.mxcinsTools || {};
 
   const libDir = join(dir, 'lib');
@@ -79,7 +81,11 @@ function build(dir) {
   if (types) {
     rimraf.sync(join(dir, 'types'));
     shell.cd(join(cwd, dir));
-    shell.exec('tsc -d --declarationDir types --emitDeclarationOnly --sourceMap');
+    shell.exec(`tsc -d --declarationDir types --emitDeclarationOnly --sourceMap`);
+    if (typeof types === 'string' && types !== 'types') {
+      shell.exec(`cp -R types/* ${types}`);
+      rimraf.sync(join(dir, 'types'));
+    }
     shell.cd(cwd);
   }
 
@@ -103,7 +109,7 @@ function build(dir) {
           } else if (['.js', '.ts', '.tsx'].includes(extname(f.path))) {
             const isBrowserFile =
               isBrowser ||
-              (browserFiles && browserFiles.includes(`${slash(f.path).replace(`${join(cwd, dir)}/`, '')}`));
+              (browserFiles && browserFiles.includes(`${slash(f.path).replace(`${root}/`, '')}`));
             const transformed = transform({
               content: f.contents,
               isBrowser: isBrowserFile,
@@ -113,7 +119,7 @@ function build(dir) {
             f.path = f.path.replace(extname(f.path), '.js');
             f.map = transformed.map;
             log.transform(
-              chalk[isBrowserFile ? 'yellow' : 'blue'](`${slash(f.path).replace(`${cwd}/`, '')}`),
+              chalk[isBrowserFile ? 'yellow' : 'blue'](`${slash(f.path).replace(`${root}/`, '')}`),
             );
           }
           cb(null, f);
