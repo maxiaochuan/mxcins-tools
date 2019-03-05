@@ -99,6 +99,7 @@ function build(dir) {
           `!${join(srcDir, '**/.umi-production/**/*')}`,
           `!${join(srcDir, '**/*.test.js')}`,
           `!${join(srcDir, '**/*.e2e.js')}`,
+          `!${join(srcDir, 'pages/**/*')}`,
         ],
         { allowEmpty: true, base: srcDir },
       )
