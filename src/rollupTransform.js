@@ -8,27 +8,30 @@ const chalk = require('chalk');
 const { logger } = require('./utils');
 
 const babelConfig = {
-    exclude: 'node_modules/**',
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    runtimeHelpers: true,
-    sourceMaps: true,
-    presets: [
-      [require.resolve('@babel/preset-typescript'), {}],
-      [require.resolve('@babel/preset-env'), {
+  exclude: 'node_modules/**',
+  extensions: ['.js', '.jsx', '.ts', '.tsx'],
+  runtimeHelpers: true,
+  sourceMaps: true,
+  presets: [
+    [require.resolve('@babel/preset-typescript'), {}],
+    [
+      require.resolve('@babel/preset-env'),
+      {
         modules: false,
         targets: {
           browsers: ['last 2 versions', 'IE 10'],
         },
         exclude: ['transform-regenerator'],
-      }],
-      require.resolve('@babel/preset-react'),
+      },
     ],
-    plugins: [
-      require.resolve('@babel/plugin-proposal-export-default-from'),
-      [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
-      [require.resolve('@babel/plugin-proposal-class-properties'), { loose: true }],
-    ],
-}
+    require.resolve('@babel/preset-react'),
+  ],
+  plugins: [
+    require.resolve('@babel/plugin-proposal-export-default-from'),
+    [require.resolve('@babel/plugin-proposal-decorators'), { legacy: true }],
+    [require.resolve('@babel/plugin-proposal-class-properties'), { loose: true }],
+  ],
+};
 
 // function generateExternal(dependencies) {
 //   return (id) => {
@@ -114,11 +117,13 @@ function build(dir, { cwd, pkg, watch }) {
     return watcher;
   }
   return rollup.rollup(inputOptions).then(bundle => {
-    return Promise.all(output.map(o => bundle.write(o).then(() => {
-      logger.transform(
-        chalk.green(`rollup ${o.format} -> ${o.file}`),
-      );
-    })));
+    return Promise.all(
+      output.map(o =>
+        bundle.write(o).then(() => {
+          logger.transform(chalk.green(`rollup ${o.format} -> ${o.file}`));
+        }),
+      ),
+    );
   });
 }
 

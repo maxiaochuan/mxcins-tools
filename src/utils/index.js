@@ -24,6 +24,11 @@ const logger = new Signale({
       color: 'yellow',
       label: 'watch',
     },
+    tsc: {
+      badge: '🎅',
+      color: 'gray',
+      label: 'typings',
+    }
   },
 });
 

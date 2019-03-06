@@ -69,12 +69,17 @@ function createStream(srcDir, { cwd, root, nodes, libDir }) {
             filename: f.path,
           });
 
-          f.contents = Buffer.from(`${transformed.code}\n\n//# sourceMappingURL=${basename(f.path).replace(extname(f.path), '.js.map')}`);
+          f.contents = Buffer.from(
+            `${transformed.code}\n\n//# sourceMappingURL=${basename(f.path).replace(
+              extname(f.path),
+              '.js.map',
+            )}`,
+          );
           f.path = f.path.replace(extname(f.path), '.js');
 
           // map
           if (transformed.map) {
-          // # sourceMappingURL=b.js.map
+            // # sourceMappingURL=b.js.map
             const mf = f.clone();
             mf.contents = Buffer.from(JSON.stringify(transformed.map));
             mf.path = f.path.replace(extname(f.path), '.js.map');
