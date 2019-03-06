@@ -27,7 +27,7 @@ function build(dir, opts) {
   if (pkg.mxcinsTools.types) {
     const { types } = pkg.mxcinsTools;
     const tDir = types === true ? 'types' : types;
-    rimraf.sync(join(cwd, dir, tDir))
+    rimraf.sync(join(cwd, dir, tDir));
     shell.cd(join(cwd, dir));
     shell.exec(`tsc -d --declarationDir ${tDir} --emitDeclarationOnly`);
     shell.cd(cwd);

@@ -28,7 +28,7 @@ const logger = new Signale({
       badge: '🎅',
       color: 'gray',
       label: 'typings',
-    }
+    },
   },
 });
 
