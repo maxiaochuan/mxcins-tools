@@ -1,6 +1,8 @@
 const { Signale } = require('signale');
+const { join } = require('path');
+const { existsSync } = require('fs');
 
-module.exports = new Signale({
+const logger = new Signale({
   types: {
     transform: {
       badge: '🎅',
@@ -24,3 +26,12 @@ module.exports = new Signale({
     },
   },
 });
+
+function isLerna(cw) {
+  return existsSync(join(cw, 'lerna.json'));
+}
+
+module.exports = {
+  isLerna,
+  logger,
+};
