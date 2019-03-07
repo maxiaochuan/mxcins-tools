@@ -8,9 +8,15 @@ if (args.v || args.version) {
   process.exit(0);
 }
 
+const cwd = process.cwd();
+const watch = args.w || args.watch;
+
 switch (args._[0]) {
   case 'build':
-    require(`../src/${args._}`);
+    require(`../lib/build`).default({
+      cwd,
+      watch,
+    });
     break;
   default:
     signale.error(`Unknown command ${args._}`);
