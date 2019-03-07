@@ -5,7 +5,7 @@ import registerBabel from './registerBabel';
 import getConfig from './getConfig';
 import { CONFIG_FILES } from './const';
 import rollup from './rollup';
-import { IEsm } from './types';
+import { IEsm, ICjs } from './types';
 
 interface IOpts {
   watch?: boolean;
@@ -32,7 +32,20 @@ export default async function build(opts: IOpts) {
       if (esm.type === 'rollup') {
         await rollup({ cwd, watch, type: 'esm', config });
       }
-      // await rollup({ type: 'esm' });
+    }
+
+    if (config.cjs) {
+      const cjs = config.cjs as ICjs;
+      if (cjs.type === 'rollup') {
+        await rollup({ cwd, watch, type: 'cjs', config });
+      }
+    }
+
+    if (config.umd) {
+      const umd = config.umd as ICjs;
+      if (umd.type === 'rollup') {
+        await rollup({ cwd, watch, type: 'umd', config });
+      }
     }
   } catch (e) {
     signale.error(e);

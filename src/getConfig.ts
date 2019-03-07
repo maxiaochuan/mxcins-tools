@@ -15,9 +15,6 @@ function getEntry({ cwd }: { cwd: string }) {
   }
 }
 
-function bundleTypeFormatter(c: IConfig, type: ModuleFormat) {
-  return;
-}
 /**
  * 获取配置文件并且格式化
  * @param opts
@@ -34,5 +31,7 @@ export default function(opts: IGetBundleConfigOpts): IFormattedConfig {
   return {
     entry,
     esm: typeof uc.esm === 'string' ? { type: uc.esm } : uc.esm,
+    cjs: typeof uc.cjs === 'string' ? { type: uc.cjs } : uc.cjs,
+    umd: typeof uc.umd === 'string' ? { type: uc.umd } : uc.umd,
   };
 }

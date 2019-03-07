@@ -2,37 +2,52 @@
   "name": "@mxcins/tools",
   "version": "2.0.0-alpha.0",
   "description": "tools",
+  "homepage": "https://github.com/maxiaochuan/mxcins-tools",
+  "bugs": {
+    "url": "https://github.com/maxiaochuan/mxcins-tools/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxiaochuan/mxcins-tools"
+  },
+  "license": "MIT",
+  "files": [
+    "src",
+    "bin"
+  ],
+  "types": "src/types.d.ts",
   "bin": {
-    "mxcins-tools": "./bin/mxcins-tools.js",
-    "mtools": "./bin/mxcins-tools.js"
+    "mtools": "./bin/mxcins-tools.js",
+    "mxcins-tools": "./bin/mxcins-tools.js"
   },
   "scripts": {
     "build": "babel src --out-dir lib -x .ts",
     "lint": "yarn lint:ts",
-    "lint:ts": "tslint --fix \"src/**/*.ts*\"",
     "lint-staged": "lint-staged",
     "lint-staged:js": "eslint --fix --ext .js",
     "lint-staged:ts": "tslint --fix",
-    "prettier": "prettier --write \"./src/**/*\"",
-    "prepublishOnly": "np --no-cleanup --yolo --no-publish"
-  },
-  "types": "src/types.d.ts",
-  "lint-staged": {
-    "**/*.{js,jsx,ts,tsx,less}": [
-      "prettier --write",
-      "git add"
-    ]
+    "lint:ts": "tslint --fix \"src/**/*.ts*\"",
+    "prepublishOnly": "np --no-cleanup --yolo --no-publish",
+    "prettier": "prettier --write \"./src/**/*\""
   },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
     }
   },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx,less}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/*.{ts,tsx}": "yarn lint-staged:ts"
+  },
   "dependencies": {
     "@babel/core": "7.3.4",
     "@babel/plugin-proposal-class-properties": "7.3.3",
     "@babel/plugin-proposal-decorators": "7.3.0",
     "@babel/plugin-proposal-export-default-from": "7.2.0",
+    "@babel/plugin-transform-runtime": "^7.3.4",
     "@babel/preset-env": "7.3.1",
     "@babel/preset-react": "7.0.0",
     "@babel/preset-typescript": "7.1.0",
@@ -55,25 +70,6 @@
     "vinyl-fs": "3.0.3",
     "yargs-parser": "11.1.1"
   },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/maxiaochuan/mxcins-tools"
-  },
-  "homepage": "https://github.com/maxiaochuan/mxcins-tools",
-  "authors": [
-    "XiaochuanMa <mxcins@gmail.com> (https://github.com/maxiaochuan)"
-  ],
-  "bugs": {
-    "url": "https://github.com/maxiaochuan/mxcins-tools/issues"
-  },
-  "files": [
-    "src",
-    "bin"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "@types/node": "^11.10.5",
@@ -87,5 +83,11 @@
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
+  "authors": [
+    "XiaochuanMa <mxcins@gmail.com> (https://github.com/maxiaochuan)"
+  ],
   "gitHead": "ca090e345f12c86eec7b4c5b24ffb1caf24a112d"
 }

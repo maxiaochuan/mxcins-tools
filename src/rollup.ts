@@ -22,6 +22,7 @@ export default async function build(opts: IRollupOpts) {
         watch: {},
       },
     ]);
+    signale.start(`rollup watch -> [${type}] start`);
     watcher.on('event', event => {
       if (event.error) {
         signale.error(event.error);
@@ -31,9 +32,11 @@ export default async function build(opts: IRollupOpts) {
     });
   } else {
     const { output, ...input } = rollupConfig;
+    signale.pending(`rollup -> [${type}]`);
     const bundle = await rollup(input);
     if (output) {
       await bundle.write(output);
+      signale.success(`rollup -> [${type}] success`);
     }
   }
 }
