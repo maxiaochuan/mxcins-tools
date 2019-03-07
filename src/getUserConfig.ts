@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from 'fs';
 import merge from 'lodash.merge';
 import * as assert from 'assert';
 import { getExistFile } from './utils';
-import { IConfig, IOpts, IFormattedConfig } from './types';
+import { IOpts, IFormattedConfig } from './types';
 import { CONFIG_FILES, ENTRY_FILES } from './const';
 
 function getEntry({ cwd }: { cwd: string }) {
@@ -19,7 +19,7 @@ export default function getUserConfig(opts: IOpts): IFormattedConfig {
   const { cwd } = opts;
   const file = getExistFile({ cwd, files: CONFIG_FILES });
   assert.ok(file || opts.config, 'config file must be exit');
-  let config = opts.config;
+  let config = opts.config || {};
   if (file) {
     config = merge(d(require(file.abs)), opts.config || {});
   }

@@ -1,10 +1,16 @@
 export type BundleType = 'rollup' | 'babel';
 export type ModuleFormat = 'cjs' | 'esm' | 'umd';
 
+interface IPackage {
+  dependencies?: object;
+  peerDependencies?: object;
+  name: object;
+}
+
 interface IOpts {
-  watch?: boolean;
   cwd: string;
-  config: IConfig;
+  watch?: boolean;
+  config?: IConfig;
 }
 
 interface IEsm {
