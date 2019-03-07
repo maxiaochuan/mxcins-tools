@@ -3,9 +3,11 @@
   "version": "2.0.0-alpha.0",
   "description": "tools",
   "bin": {
-    "mxcins-tools": "./bin/mxcins-tools.js"
+    "mxcins-tools": "./bin/mxcins-tools.js",
+    "mtools": "./bin/mxcins-tools.js"
   },
   "scripts": {
+    "build": "babel src --out-dir lib",
     "prettier": "prettier --write \"./src/**/*\"",
     "lint": "eslint --fix src/**/*.js",
     "prepublishOnly": "yarn lint && np --no-cleanup --yolo --no-publish"
