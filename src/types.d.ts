@@ -1,6 +1,12 @@
 export type BundleType = 'rollup' | 'babel';
 export type ModuleFormat = 'cjs' | 'esm' | 'umd';
 
+interface IOpts {
+  watch?: boolean;
+  cwd: string;
+  config: IConfig;
+}
+
 interface IEsm {
   type: BundleType;
   name?: string;
