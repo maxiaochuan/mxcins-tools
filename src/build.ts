@@ -5,7 +5,7 @@ import rimraf from 'rimraf';
 import registerBabel from './registerBabel';
 import getUserConfig from './getUserConfig';
 import { IEsm, ICjs, IUmd, IOpts } from './types';
-import { getPackage, signale, registerPrefix } from './utils';
+import { getPackage, signale, registerPrefix, updatePackage } from './utils';
 import { CONFIG_FILES } from './const';
 import rollup from './rollup';
 import babel from './babel';
@@ -56,6 +56,8 @@ export async function build(opts: IOpts) {
       await rollup({ cwd, watch, type: 'umd', config });
       signale.complete('[umd] building complete.');
     }
+
+    updatePackage(cwd);
   } catch (e) {
     signale.error(e);
   }
@@ -65,7 +67,7 @@ export async function buildForLerna(opts: IOpts) {
   const { cwd } = opts;
   try {
     registerBabel({ cwd, only: CONFIG_FILES });
-    const config = getUserConfig(opts);
+    // const config = getUserConfig(opts);
     const pkgs = readdirSync(join(opts.cwd, 'packages'));
     for (const pkg of pkgs) {
       const pkgPath = join(opts.cwd, 'packages', pkg);
@@ -77,7 +79,7 @@ export async function buildForLerna(opts: IOpts) {
       await build({
         ...opts,
         cwd: pkgPath,
-        config: getUserConfig({ ...opts, config }),
+        config: {},
       });
     }
   } catch (e) {

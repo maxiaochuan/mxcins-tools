@@ -4,7 +4,15 @@ export type ModuleFormat = 'cjs' | 'esm' | 'umd';
 export interface IPackage {
   dependencies?: object;
   peerDependencies?: object;
-  name: object;
+  name: string;
+  main?: string;
+  ['umd:main']?: string;
+  unpkg: string;
+  module?: string;
+  source?: string;
+  ['jsnext:main']?: string;
+  browser?: string;
+  sideEffects?: boolean;
 }
 
 /**
@@ -27,7 +35,7 @@ export interface ICjs {
 }
 
 export interface IUmd {
-  type: 'babel';
+  type: 'rollup';
   name?: string;
 }
 
@@ -35,7 +43,8 @@ export interface IConfig {
   entry?: string;
   esm?: BundleType | IEsm | false;
   cjs?: BundleType | ICjs | false;
-  umd?: 'babel' | IUmd | false;
+  umd?: 'rollup' | IUmd | false;
+  outputExports?: 'default' | 'named' | 'none' | 'auto';
   runtimeHelpers?: boolean;
   nodes?: string[];
 }
@@ -45,6 +54,7 @@ export interface IFormattedConfig {
   esm?: IEsm | false;
   cjs?: ICjs | false;
   umd?: IUmd | false;
+  outputExports?: 'default' | 'named' | 'none' | 'auto';
   runtimeHelpers?: boolean;
   nodes: string[];
 }

@@ -5,3 +5,4 @@ declare module 'rollup-plugin-commonjs';
 declare module 'lodash.merge';
 declare module '@babel/core';
 declare module 'signale/types';
+declare module 'sort-package-json';

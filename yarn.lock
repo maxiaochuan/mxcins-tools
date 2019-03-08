@@ -871,6 +871,11 @@
   resolved "http://registry.npm.taobao.org/@types/node/download/@types/node-11.10.4.tgz#3f5fc4f0f322805f009e00ab35a2ff3d6b778e42"
   integrity sha1-P1/E8PMigF8AngCrNaL/PWt3jkI=
 
+"@types/prettier@^1.16.1":
+  version "1.16.1"
+  resolved "http://registry.npm.taobao.org/@types/prettier/download/@types/prettier-1.16.1.tgz#328d1c9b54402e44119398bcb6a31b7bbd606d59"
+  integrity sha1-Mo0cm1RALkQRk5i8tqMbe71gbVk=
+
 "@types/rimraf@^2.0.2":
   version "2.0.2"
   resolved "http://registry.npm.taobao.org/@types/rimraf/download/@types/rimraf-2.0.2.tgz#7f0fc3cf0ff0ad2a99bb723ae1764f30acaf8b6e"
@@ -1670,6 +1675,11 @@ delegates@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/delegates/download/delegates-1.0.0.tgz#84c6e159b81904fdca59a0ef44cd870d31250f9a"
   integrity sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o=
+
+detect-indent@^5.0.0:
+  version "5.0.0"
+  resolved "http://registry.npm.taobao.org/detect-indent/download/detect-indent-5.0.0.tgz#3871cc0a6a002e8c3e5b3cf7f336264675f06b9d"
+  integrity sha1-OHHMCmoALow+Wzz38zYmRnXwa50=
 
 detect-libc@^1.0.2:
   version "1.0.3"
@@ -4408,6 +4418,19 @@ snapdragon@^0.8.1:
     source-map "^0.5.6"
     source-map-resolve "^0.5.0"
     use "^3.1.0"
+
+sort-object-keys@^1.1.2:
+  version "1.1.2"
+  resolved "http://registry.npm.taobao.org/sort-object-keys/download/sort-object-keys-1.1.2.tgz#d3a6c48dc2ac97e6bc94367696e03f6d09d37952"
+  integrity sha1-06bEjcKsl+a8lDZ2luA/bQnTeVI=
+
+sort-package-json@^1.21.0:
+  version "1.21.0"
+  resolved "http://registry.npm.taobao.org/sort-package-json/download/sort-package-json-1.21.0.tgz#9501273da130693b4dd1ebe68882d1d289119546"
+  integrity sha1-lQEnPaEwaTtN0evmiILR0okRlUY=
+  dependencies:
+    detect-indent "^5.0.0"
+    sort-object-keys "^1.1.2"
 
 source-map-resolve@^0.5.0:
   version "0.5.2"

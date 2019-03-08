@@ -44,5 +44,7 @@ export default function getUserConfig(opts: IOpts): IFormattedConfig {
     cjs: typeof config.cjs === 'string' ? { type: config.cjs } : config.cjs,
     umd: typeof config.umd === 'string' ? { type: config.umd } : config.umd,
     nodes: config.nodes || [],
+    runtimeHelpers: config.runtimeHelpers || false,
+    outputExports: config.outputExports || 'auto',
   };
 }

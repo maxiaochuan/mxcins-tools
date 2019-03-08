@@ -104,6 +104,7 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
         plugins,
         output: {
           format,
+          exports: config.outputExports,
           file: join(cwd, `dist/${(config.esm && config.esm.name) || fname}.cjs.js`),
         },
       };
@@ -122,6 +123,7 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
         plugins,
         output: {
           format,
+          exports: config.outputExports,
           name: (config.umd && config.umd.name) || fname,
           file: join(cwd, `dist/${(config.umd && config.umd.name) || fname}.umd.js`),
         },
