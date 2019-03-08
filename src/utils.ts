@@ -1,4 +1,4 @@
-import signale, { DefaultMethods } from 'signale';
+import si, { Signale, DefaultMethods } from 'signale';
 import { join } from 'path';
 import { existsSync, readFileSync } from 'fs';
 import { IPackage } from './types';
@@ -8,21 +8,19 @@ interface IGetExistFileOpts {
   files: string[];
 }
 
-export type Print = (type: DefaultMethods, msg: any) => void;
+export const signale: Signale = {} as any;
+const types: DefaultMethods[] = ['info', 'success', 'start', 'error', 'complete', 'watch'];
 
-export function createPrint(pkg: IPackage) {
+export function registerPrefix(pkg: IPackage) {
   const prefix = pkg.name ? `[${pkg.name}] ` : '';
-  const print: Print = (type, msg) => {
-    // return signale[type]({ prefix, message:msg});
-    return signale[type](`${prefix}${msg}`);
-  };
-  return print;
+  types.forEach(t => {
+    signale[t] = (message: any) => si[t](`${prefix}${message}`);
+  });
 }
 
-export function getPackage(cwd: string) {
+export function getPackage(cwd: string): IPackage {
   const pkgPath = join(cwd, 'package.json');
-  const pkg: IPackage = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-  return pkg;
+  return JSON.parse(readFileSync(pkgPath, 'utf-8'));
 }
 
 export function getExistFile({ cwd, files }: IGetExistFileOpts) {

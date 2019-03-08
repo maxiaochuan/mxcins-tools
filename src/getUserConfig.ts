@@ -43,5 +43,6 @@ export default function getUserConfig(opts: IOpts): IFormattedConfig {
     esm: typeof config.esm === 'string' ? { type: config.esm } : config.esm,
     cjs: typeof config.cjs === 'string' ? { type: config.cjs } : config.cjs,
     umd: typeof config.umd === 'string' ? { type: config.umd } : config.umd,
+    nodes: config.nodes || [],
   };
 }

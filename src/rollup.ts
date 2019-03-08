@@ -1,19 +1,17 @@
-import signale from 'signale';
 import { rollup, watch } from 'rollup';
+import { signale } from './utils';
 import { ModuleFormat, IFormattedConfig } from './types';
 import getRollupConfig from './getRollupConfig';
-import { Print } from './utils';
 
 interface IRollupOpts {
   cwd: string;
-  print: Print;
   watch?: boolean;
   type: ModuleFormat;
   config: IFormattedConfig;
 }
 
 export default async function build(opts: IRollupOpts) {
-  const { cwd, type, config, print } = opts;
+  const { cwd, type, config } = opts;
 
   const rollupConfig = getRollupConfig({ cwd, type, config });
 
@@ -24,21 +22,21 @@ export default async function build(opts: IRollupOpts) {
         watch: {},
       },
     ]);
-    print('watch', `rollup.watch`);
+    signale.watch(`rollup.watching: [${type}]`);
     watcher.on('event', event => {
       if (event.error) {
         signale.error(event.error);
       } else {
-        print('info', `[${type}] file changed`);
+        signale.info(`[${type}] file changed`);
       }
     });
   } else {
     const { output, ...input } = rollupConfig;
-    print('info', `rollup <- ${input.input}`);
+    signale.info(`rollup <- ${input.input}`);
     const bundle = await rollup(input);
     if (output) {
       await bundle.write(output);
-      print('info', `rollup -> ${(output.file as string).replace(`${cwd}/`, '')}`);
+      signale.info(`rollup -> ${(output.file as string).replace(`${cwd}/`, '')}`);
     }
   }
 }

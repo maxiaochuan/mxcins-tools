@@ -1,30 +1,33 @@
 export type BundleType = 'rollup' | 'babel';
 export type ModuleFormat = 'cjs' | 'esm' | 'umd';
 
-interface IPackage {
+export interface IPackage {
   dependencies?: object;
   peerDependencies?: object;
   name: object;
 }
 
-interface IOpts {
+/**
+ * build options
+ */
+export interface IOpts {
   cwd: string;
   watch?: boolean;
   config?: IConfig;
 }
 
-interface IEsm {
+export interface IEsm {
   type: BundleType;
   name?: string;
 }
 
-interface ICjs {
+export interface ICjs {
   type: BundleType;
   name?: string;
 }
 
-interface IUmd {
-  type: BundleType;
+export interface IUmd {
+  type: 'babel';
   name?: string;
 }
 
@@ -32,14 +35,16 @@ export interface IConfig {
   entry?: string;
   esm?: BundleType | IEsm | false;
   cjs?: BundleType | ICjs | false;
-  umd?: BundleType | IUmd | false;
+  umd?: 'babel' | IUmd | false;
   runtimeHelpers?: boolean;
+  nodes?: string[];
 }
 
-interface IFormattedConfig {
+export interface IFormattedConfig {
   entry: string;
   esm?: IEsm | false;
   cjs?: ICjs | false;
   umd?: IUmd | false;
   runtimeHelpers?: boolean;
+  nodes: string[];
 }

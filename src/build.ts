@@ -1,21 +1,22 @@
 import { join } from 'path';
 import { readdirSync, existsSync } from 'fs';
 import * as assert from 'assert';
-import signale from 'signale';
 import rimraf from 'rimraf';
 import registerBabel from './registerBabel';
 import getUserConfig from './getUserConfig';
+import { IEsm, ICjs, IUmd, IOpts } from './types';
+import { getPackage, signale, registerPrefix } from './utils';
 import { CONFIG_FILES } from './const';
 import rollup from './rollup';
-import { IEsm, ICjs, IUmd, IOpts } from './types';
-import { getPackage, createPrint } from './utils';
+import babel from './babel';
 
 export async function build(opts: IOpts) {
   const { cwd, watch } = opts;
 
   try {
     const pkg = getPackage(cwd);
-    const print = createPrint(pkg);
+    // 注册 log prefix;
+    registerPrefix(pkg);
 
     // 注册babel 读取配置文件
     registerBabel({ cwd, only: CONFIG_FILES });
@@ -24,36 +25,37 @@ export async function build(opts: IOpts) {
     const config = getUserConfig(opts);
 
     // 清除 dist
-    print('info', 'Clean dist directory');
+    signale.info('Clean dist directory');
     rimraf.sync(join(cwd, 'dist'));
 
     if (config.esm) {
-      print('start', 'Build esm starting.');
       const esm = config.esm as IEsm;
+      signale.start(`[esm] Build with ${esm.type}.`);
       if (esm.type === 'rollup') {
-        await rollup({ cwd, watch, type: 'esm', config, print });
+        await rollup({ cwd, watch, type: 'esm', config });
+      } else {
+        await babel({ cwd, watch, type: 'esm', config });
       }
-      print('complete', 'Build esm complete.');
+      signale.complete('[cjs] building complete.');
     }
 
     if (config.cjs) {
-      print('start', 'Build cjs starting.');
       const cjs = config.cjs as ICjs;
+      signale.start(`[cjs] Build with ${cjs.type}.`);
       if (cjs.type === 'rollup') {
-        await rollup({ cwd, watch, type: 'cjs', config, print });
+        await rollup({ cwd, watch, type: 'cjs', config });
+      } else {
+        await babel({ cwd, watch, type: 'cjs', config });
       }
-      print('complete', 'Build cjs complete.');
+      signale.complete('[cjs] building complete.');
     }
 
     if (config.umd) {
-      print('start', 'Build umd starting.');
       const umd = config.umd as IUmd;
-      if (umd.type === 'rollup') {
-        await rollup({ cwd, watch, type: 'umd', config, print });
-      }
-      print('complete', 'Build umd complete.');
+      signale.start(`[umd] Build with ${umd.type}.`);
+      await rollup({ cwd, watch, type: 'umd', config });
+      signale.complete('[umd] building complete.');
     }
-    print('success', 'All build success.');
   } catch (e) {
     signale.error(e);
   }

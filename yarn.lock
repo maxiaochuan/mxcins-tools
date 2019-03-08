@@ -839,6 +839,14 @@
   resolved "http://registry.npm.taobao.org/@types/events/download/@types/events-3.0.0.tgz#2862f3f58a9a7f7c3e78d79f130dd4d71c25c2a7"
   integrity sha1-KGLz9Yqaf3w+eNefEw3U1xwlwqc=
 
+"@types/glob-stream@*":
+  version "6.1.0"
+  resolved "http://registry.npm.taobao.org/@types/glob-stream/download/@types/glob-stream-6.1.0.tgz#7ede8a33e59140534f8d8adfb8ac9edfb31897bc"
+  integrity sha1-ft6KM+WRQFNPjYrfuKye37MYl7w=
+  dependencies:
+    "@types/glob" "*"
+    "@types/node" "*"
+
 "@types/glob@*":
   version "7.1.1"
   resolved "http://registry.npm.taobao.org/@types/glob/download/@types/glob-7.1.1.tgz#aa59a1c6e3fbc421e07ccd31a944c30eba521575"
@@ -875,6 +883,29 @@
   version "1.2.1"
   resolved "http://registry.npm.taobao.org/@types/signale/download/@types/signale-1.2.1.tgz#7ff3d477e8d5983b7ecef544f5830c3cb271d1a8"
   integrity sha1-f/PUd+jVmDt+zvVE9YMMPLJx0ag=
+  dependencies:
+    "@types/node" "*"
+
+"@types/through2@^2.0.34":
+  version "2.0.34"
+  resolved "http://registry.npm.taobao.org/@types/through2/download/@types/through2-2.0.34.tgz#9c2a259a238dace2a05a2f8e94b786961bc27ac4"
+  integrity sha1-nColmiONrOKgWi+OlLeGlhvCesQ=
+  dependencies:
+    "@types/node" "*"
+
+"@types/vinyl-fs@^2.4.11":
+  version "2.4.11"
+  resolved "http://registry.npm.taobao.org/@types/vinyl-fs/download/@types/vinyl-fs-2.4.11.tgz#b98119b8bb2494141eaf649b09fbfeb311161206"
+  integrity sha1-uYEZuLsklBQer2SbCfv+sxEWEgY=
+  dependencies:
+    "@types/glob-stream" "*"
+    "@types/node" "*"
+    "@types/vinyl" "*"
+
+"@types/vinyl@*":
+  version "2.0.2"
+  resolved "http://registry.npm.taobao.org/@types/vinyl/download/@types/vinyl-2.0.2.tgz#4f3b8dae8f5828d3800ef709b0cff488ee852de3"
+  integrity sha1-TzuNro9YKNOADvcJsM/0iO6FLeM=
   dependencies:
     "@types/node" "*"
 
