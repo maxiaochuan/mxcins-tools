@@ -12,7 +12,7 @@
   },
   "license": "MIT",
   "files": [
-    "src",
+    "lib",
     "bin"
   ],
   "types": "src/types.d.ts",
