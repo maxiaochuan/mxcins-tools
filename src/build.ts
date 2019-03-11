@@ -57,7 +57,9 @@ export async function build(opts: IOpts) {
       signale.complete('[umd] building complete.');
     }
 
-    updatePackage(cwd);
+    if (!watch) {
+      updatePackage(cwd);
+    }
   } catch (e) {
     signale.error(e);
   }
