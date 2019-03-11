@@ -42,7 +42,7 @@ export default function getUserConfig(opts: IOpts): IFormattedConfig {
     entry,
     esm: typeof config.esm === 'string' ? { type: config.esm } : config.esm,
     cjs: typeof config.cjs === 'string' ? { type: config.cjs } : config.cjs,
-    umd: typeof config.umd === 'string' ? { type: config.umd } : config.umd,
+    umd: typeof config.umd === 'string' ? { type: config.umd, globals: {} } : config.umd,
     browserFiles: config.browserFiles || [],
     runtimeHelpers: config.runtimeHelpers || false,
     outputExports: config.outputExports || 'auto',

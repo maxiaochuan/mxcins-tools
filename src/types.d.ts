@@ -37,6 +37,7 @@ export interface ICjs {
 export interface IUmd {
   type: 'rollup';
   name?: string;
+  globals?: { [x: string]: string };
 }
 
 export interface IConfig {
@@ -54,7 +55,7 @@ export interface IFormattedConfig {
   esm?: IEsm | false;
   cjs?: ICjs | false;
   umd?: IUmd | false;
-  outputExports?: 'default' | 'named' | 'none' | 'auto';
-  runtimeHelpers?: boolean;
+  outputExports: 'default' | 'named' | 'none' | 'auto';
+  runtimeHelpers: boolean;
   browserFiles: string[];
 }

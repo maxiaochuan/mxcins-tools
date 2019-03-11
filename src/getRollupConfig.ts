@@ -1,10 +1,9 @@
 import { join, extname, basename } from 'path';
-import signale from 'signale';
 import typescript from 'rollup-plugin-typescript2';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
-import { IFormattedConfig, ModuleFormat } from './types';
+import { IFormattedConfig, ModuleFormat, IUmd } from './types';
 import { RollupOptions, IsExternal } from 'rollup';
 import getBabelConfig from './getBabelConfig';
 
@@ -124,6 +123,7 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
         output: {
           format,
           exports: config.outputExports,
+          globals: (config.umd as IUmd).globals,
           name: (config.umd && config.umd.name) || fname,
           file: join(cwd, `dist/${(config.umd && config.umd.name) || fname}.umd.js`),
         },
