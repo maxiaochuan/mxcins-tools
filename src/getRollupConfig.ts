@@ -118,7 +118,15 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
       );
       return {
         input,
-        external: [...Object.keys(pkg.peerDependencies || {})],
+        external: [
+          ...Object.keys(pkg.peerDependencies || {}),
+          /**
+           * 2019-03-11 15:33:37 在打包umd 的时候 引入 d3   d3 pkg.module 使用esmodule
+           * 如果 external 不加入d3 的话，只在globals加入 会出现先转换 的情况
+           * 解决方案： 将 globals 加入到 external
+           */
+          ...Object.keys((config.umd as IUmd).globals || {}),
+        ],
         plugins,
         output: {
           format,
