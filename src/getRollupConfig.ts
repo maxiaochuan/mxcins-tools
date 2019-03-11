@@ -3,6 +3,8 @@ import typescript from 'rollup-plugin-typescript2';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
+import postcss from 'rollup-plugin-postcss';
+import autoprefixer from 'autoprefixer';
 import { IFormattedConfig, ModuleFormat, IUmd } from './types';
 import { RollupOptions, IsExternal } from 'rollup';
 import getBabelConfig from './getBabelConfig';
@@ -65,6 +67,13 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
   const external = generateExternal(pkg, runtimeHelpers);
 
   const plugins = [
+    postcss({
+      extract: 'dist/styles.css',
+      modules: false,
+      namedExports: true,
+      use: ['less'],
+      plugins: [autoprefixer()],
+    }),
     ...(isTs
       ? [
           typescript({
