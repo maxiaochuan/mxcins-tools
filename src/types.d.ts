@@ -46,7 +46,7 @@ export interface IConfig {
   umd?: 'rollup' | IUmd | false;
   outputExports?: 'default' | 'named' | 'none' | 'auto';
   runtimeHelpers?: boolean;
-  nodes?: string[];
+  browserFiles?: string[];
 }
 
 export interface IFormattedConfig {
@@ -56,5 +56,5 @@ export interface IFormattedConfig {
   umd?: IUmd | false;
   outputExports?: 'default' | 'named' | 'none' | 'auto';
   runtimeHelpers?: boolean;
-  nodes: string[];
+  browserFiles: string[];
 }

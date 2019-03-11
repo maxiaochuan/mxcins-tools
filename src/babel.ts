@@ -23,18 +23,18 @@ interface IBabelOpts {
 
 function transform(f: { contents: string; path: string }, opts: IBabelOpts) {
   const { cwd, type, config } = opts;
-  const nodes = config.nodes;
+  const { browserFiles } = config;
 
-  const isNode = nodes.includes(slash(f.path).replace(`${cwd}/`, ''));
+  const isBrowser = browserFiles.includes(slash(f.path).replace(`${cwd}/`, ''));
   signale.info(
-    `[${type}] Babel Transform: ${isNode ? 'node' : 'browser'} ${slash(f.path).replace(
+    `[${type}] Babel Transform: ${isBrowser ? 'browser' : 'node'} ${slash(f.path).replace(
       `${cwd}/`,
       '',
     )}`,
   );
 
   const babelConfig = getBabelConfig({
-    target: isNode ? 'node' : 'browser',
+    target: isBrowser ? 'browser' : 'node',
     type,
     typescript: true,
     runtimeHelpers: config.runtimeHelpers,
