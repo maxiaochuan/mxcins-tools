@@ -65,7 +65,7 @@ export function updatePackage(cwd: string) {
   }
   writeFileSync(
     join(cwd, 'package.json'),
-    prettier.format(JSON.stringify(sort(pkg)), { parser: 'json' }),
+    prettier.format(JSON.stringify(sort(pkg)), { parser: 'json', printWidth: 1 }),
     { encoding: 'utf8' },
   );
   signale.info('Updated Package.json');
