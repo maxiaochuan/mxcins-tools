@@ -9,6 +9,8 @@ import autoprefixer from 'autoprefixer';
 import { IFormattedConfig, ModuleFormat, IUmd } from './types';
 import { RollupOptions, IsExternal } from 'rollup';
 import getBabelConfig from './getBabelConfig';
+import { getExistFile } from './utils';
+import { ENTRY_FILES } from './const';
 
 interface IGetRollupConfigOpts {
   cwd: string;
@@ -19,6 +21,13 @@ interface IGetRollupConfigOpts {
 interface IPackage {
   dependencies?: object;
   peerDependencies?: object;
+}
+
+function getEntry({ cwd }: { cwd: string }) {
+  const entry = getExistFile({ cwd, files: ENTRY_FILES });
+  if (entry) {
+    return entry.relative;
+  }
 }
 
 function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
@@ -43,9 +52,11 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
   // runtimeHelpers
   const runtimeHelpers = type === 'cjs' ? false : config.runtimeHelpers;
 
-  assert.ok(config.entry, 'entry must be exit!');
   // input;
-  const input = config.entry as string;
+  const entry = getEntry({ cwd }) || config.entry;
+  assert.ok(entry, 'entry must be exit!');
+
+  const input = entry as string;
 
   // ts
   const isTs = ['.ts', '.tsx'].includes(extname(input));

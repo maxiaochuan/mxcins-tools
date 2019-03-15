@@ -6,13 +6,6 @@ import { getExistFile } from './utils';
 import { IOpts, IFormattedConfig } from './types';
 import { CONFIG_FILES, ENTRY_FILES } from './const';
 
-function getEntry({ cwd }: { cwd: string }) {
-  const entry = getExistFile({ cwd, files: ENTRY_FILES });
-  if (entry) {
-    return entry.relative;
-  }
-}
-
 const d = <T>(o: any): T => o.default || o;
 
 export default function getUserConfig(opts: IOpts): IFormattedConfig {
