@@ -4,6 +4,7 @@
  */
 import { ModuleFormat, IFormattedConfig } from './types';
 import * as chokidar from 'chokidar';
+import * as assert from 'assert';
 import * as babel from '@babel/core';
 import vfs from 'vinyl-fs';
 import through from 'through2';
@@ -60,9 +61,12 @@ function createStream(src: string[], srcPath: string, targetPath: string, opts: 
 }
 
 export default async function build(opts: IBabelOpts) {
-  const { cwd, type, watch } = opts;
+  const { cwd, type, watch, config } = opts;
 
-  const srcPath = join(cwd, 'src');
+  const srcPath = join(cwd, config.entry || 'src');
+
+  assert.ok(statSync(srcPath).isDirectory(), 'Babel entry MUST be a directory.');
+
   const targetDir = type === 'esm' ? 'es' : 'lib';
   const targetPath = join(cwd, targetDir);
 
@@ -70,7 +74,7 @@ export default async function build(opts: IBabelOpts) {
   rimraf.sync(targetPath);
 
   const src = [
-    join(srcPath, '**/*'),
+    join(srcPath, '**/*.{js,ts,jsx,tsx}'),
     `!${join(srcPath, '**/fixtures/**/*')}`,
     `!${join(srcPath, '**/.umi/**/*')}`,
     `!${join(srcPath, '**/.umi-production/**/*')}`,

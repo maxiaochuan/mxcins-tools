@@ -1,5 +1,5 @@
 import { rollup, watch } from 'rollup';
-import { signale, registerUpdate } from './utils';
+import { signale, updatePackage } from './utils';
 import { ModuleFormat, IFormattedConfig } from './types';
 import getRollupConfig from './getRollupConfig';
 
@@ -38,7 +38,6 @@ export default async function build(opts: IRollupOpts) {
       await bundle.write(output);
       const f = (output.file as string).replace(`${cwd}/`, '');
       signale.info(`rollup -> ${f}`);
-      registerUpdate(cwd, type, f);
     }
   }
 }

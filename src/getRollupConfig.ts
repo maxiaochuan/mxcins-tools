@@ -1,4 +1,5 @@
 import { join, extname, basename } from 'path';
+import * as assert from 'assert';
 import typescript from 'rollup-plugin-typescript2';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
@@ -39,13 +40,15 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
   // pkg
   const pkg: IPackage = require(join(cwd, 'package.json'));
 
-  // input;
-  const input = config.entry;
   // runtimeHelpers
   const runtimeHelpers = type === 'cjs' ? false : config.runtimeHelpers;
 
+  assert.ok(config.entry, 'entry must be exit!');
+  // input;
+  const input = config.entry as string;
+
   // ts
-  const isTs = ['.ts', '.tsx'].includes(extname(config.entry));
+  const isTs = ['.ts', '.tsx'].includes(extname(input));
   // babel
   const babelConfig = {
     ...getBabelConfig({
@@ -61,7 +64,7 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
   };
 
   // 输入文件名称(默认值)
-  const fname = basename(config.entry).replace(extname(config.entry), '');
+  const fname = basename(input).replace(extname(input), '');
 
   const format = type;
   const external = generateExternal(pkg, runtimeHelpers);

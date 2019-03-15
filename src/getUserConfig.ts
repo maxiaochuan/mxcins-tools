@@ -35,11 +35,11 @@ export default function getUserConfig(opts: IOpts): IFormattedConfig {
   }
 
   // get entry;
-  const entry = config.entry || getEntry({ cwd }) || '';
-  assert.ok(entry, 'entry must be exit!');
+  // const entry = config.entry || getEntry({ cwd });
+  // assert.ok(entry, 'entry must be exit!');
 
   return {
-    entry,
+    entry: config.entry,
     esm: typeof config.esm === 'string' ? { type: config.esm } : config.esm,
     cjs: typeof config.cjs === 'string' ? { type: config.cjs } : config.cjs,
     umd: typeof config.umd === 'string' ? { type: config.umd, globals: {} } : config.umd,

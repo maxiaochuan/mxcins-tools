@@ -51,7 +51,7 @@ export interface IConfig {
 }
 
 export interface IFormattedConfig {
-  entry: string;
+  entry?: string;
   esm?: IEsm | false;
   cjs?: ICjs | false;
   umd?: IUmd | false;

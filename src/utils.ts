@@ -38,7 +38,7 @@ export function getExistFile({ cwd, files }: IGetExistFileOpts) {
   }
 }
 
-const updated: any = {};
+let updated: any = {};
 
 export function registerUpdate(cwd: string, type: ModuleFormat, f: string) {
   updated[cwd] = updated[cwd] || {};
@@ -48,9 +48,15 @@ export function registerUpdate(cwd: string, type: ModuleFormat, f: string) {
 export function updatePackage(cwd: string) {
   const pkg = getPackage(cwd);
   const info = updated[cwd];
+  // delete pkg.main;
+  delete pkg['umd:main'];
+  delete pkg.module;
+  delete pkg['jsnext:main'];
+  delete pkg.browser;
+  delete pkg.sideEffects;
   if (info) {
     const { esm, cjs, umd } = info;
-    pkg.main = umd || cjs || esm;
+    pkg.main = umd || cjs || esm || pkg.main;
     pkg['umd:main'] = umd;
     pkg.module = esm;
     // pkg.source = esm || cjs || umd;
@@ -69,4 +75,5 @@ export function updatePackage(cwd: string) {
     { encoding: 'utf8' },
   );
   signale.info('Updated Package.json');
+  updated = {};
 }
