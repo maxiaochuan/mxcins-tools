@@ -13,6 +13,7 @@ export interface IPackage {
   ['jsnext:main']?: string;
   browser?: string;
   sideEffects?: boolean;
+  types?: string;
 }
 
 /**

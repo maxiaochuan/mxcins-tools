@@ -3,7 +3,7 @@ import * as prettier from 'prettier';
 import { join } from 'path';
 import sort from 'sort-package-json';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { IPackage, IFormattedConfig, ModuleFormat } from './types';
+import { IPackage, ModuleFormat } from './types';
 
 interface IGetExistFileOpts {
   cwd: string;
@@ -67,6 +67,10 @@ export function updatePackage(cwd: string) {
     // }
     if (esm) {
       pkg.sideEffects = true;
+    }
+
+    if (esm || umd || cjs) {
+      pkg.types = (esm || umd || cjs).replace(/\.(esm|umd|cjs)\.js/, '.d.ts');
     }
   }
   writeFileSync(
