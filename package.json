@@ -73,6 +73,7 @@
     "signale": "^1.4.0",
     "slash2": "2.0.0",
     "sort-package-json": "^1.21.0",
+    "temp-dir": "^1.0.0",
     "through2": "3.0.0",
     "typescript": "3.3.3333",
     "vinyl-fs": "3.0.3",

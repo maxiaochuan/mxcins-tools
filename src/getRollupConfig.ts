@@ -1,19 +1,19 @@
 import { join, extname, basename } from 'path';
 import * as assert from 'assert';
+import tempDir from 'temp-dir';
 import typescript from 'rollup-plugin-typescript2';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import postcss from 'rollup-plugin-postcss';
 import autoprefixer from 'autoprefixer';
-import { IFormattedConfig, ModuleFormat, IUmd } from './types';
+import { IFormattedConfig, ModuleFormat, IUmd, IOpts } from './types';
 import { RollupOptions, IsExternal } from 'rollup';
 import getBabelConfig from './getBabelConfig';
 import { getExistFile } from './utils';
 import { ENTRY_FILES } from './const';
 
-interface IGetRollupConfigOpts {
-  cwd: string;
+interface IGetRollupConfigOpts extends IOpts {
   type: ModuleFormat;
   config: IFormattedConfig;
 }
@@ -44,7 +44,7 @@ function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
 }
 
 export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptions {
-  const { cwd, type, config } = opts;
+  const { cwd, type, root, config } = opts;
 
   // pkg
   const pkg: IPackage = require(join(cwd, 'package.json'));
@@ -91,7 +91,8 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
     ...(isTs
       ? [
           typescript({
-            tsconfig: join(cwd, 'tsconfig.json'),
+            cacheRoot: `${tempDir}/.rollup_plugin_typescript2_cache`,
+            tsconfig: join(root, 'tsconfig.json'),
             tsconfigDefaults: {
               compilerOptions: {
                 declaration: true,

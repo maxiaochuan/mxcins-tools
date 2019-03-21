@@ -11,7 +11,7 @@ import rollup from './rollup';
 import babel from './babel';
 
 export async function build(opts: IOpts) {
-  const { cwd, watch } = opts;
+  const { cwd, root, watch } = opts;
 
   try {
     const pkg = getPackage(cwd);
@@ -32,7 +32,7 @@ export async function build(opts: IOpts) {
       const esm = config.esm as IEsm;
       signale.start(`[esm] Build with ${esm.type}.`);
       if (esm.type === 'rollup') {
-        await rollup({ cwd, watch, type: 'esm', config });
+        await rollup({ cwd, root, watch, type: 'esm', config });
       } else {
         await babel({ cwd, watch, type: 'esm', config });
       }
@@ -43,7 +43,7 @@ export async function build(opts: IOpts) {
       const cjs = config.cjs as ICjs;
       signale.start(`[cjs] Build with ${cjs.type}.`);
       if (cjs.type === 'rollup') {
-        await rollup({ cwd, watch, type: 'cjs', config });
+        await rollup({ cwd, root, watch, type: 'cjs', config });
       } else {
         await babel({ cwd, watch, type: 'cjs', config });
       }
@@ -53,7 +53,7 @@ export async function build(opts: IOpts) {
     if (config.umd) {
       const umd = config.umd as IUmd;
       signale.start(`[umd] Build with ${umd.type}.`);
-      await rollup({ cwd, watch, type: 'umd', config });
+      await rollup({ cwd, root, watch, type: 'umd', config });
       signale.complete('[umd] building complete.');
     }
 
@@ -81,6 +81,7 @@ export async function buildForLerna(opts: IOpts) {
       await build({
         ...opts,
         cwd: pkgPath,
+        root: cwd,
         config: {},
       });
     }

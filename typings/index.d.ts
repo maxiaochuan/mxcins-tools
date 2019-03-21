@@ -8,3 +8,4 @@ declare module 'lodash.merge';
 declare module '@babel/core';
 declare module 'signale/types';
 declare module 'sort-package-json';
+declare module 'temp-dir';

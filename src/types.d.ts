@@ -20,6 +20,7 @@ export interface IPackage {
  * build options
  */
 export interface IOpts {
+  root: string;
   cwd: string;
   watch?: boolean;
   config?: IConfig;

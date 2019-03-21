@@ -1,9 +1,9 @@
 import { rollup, watch } from 'rollup';
 import { signale, registerUpdate } from './utils';
-import { ModuleFormat, IFormattedConfig } from './types';
+import { ModuleFormat, IFormattedConfig, IOpts } from './types';
 import getRollupConfig from './getRollupConfig';
 
-interface IRollupOpts {
+interface IRollupOpts extends IOpts {
   cwd: string;
   watch?: boolean;
   type: ModuleFormat;
@@ -11,9 +11,9 @@ interface IRollupOpts {
 }
 
 export default async function build(opts: IRollupOpts) {
-  const { cwd, type, config } = opts;
+  const { cwd, root, type, config } = opts;
 
-  const rollupConfig = getRollupConfig({ cwd, type, config });
+  const rollupConfig = getRollupConfig({ cwd, root, type, config });
 
   if (opts.watch) {
     const watcher = watch([
