@@ -44,7 +44,7 @@ function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
 }
 
 export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptions {
-  const { cwd, type, root, config } = opts;
+  const { cwd, type, config } = opts;
 
   // pkg
   const pkg: IPackage = require(join(cwd, 'package.json'));
@@ -92,7 +92,7 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
       ? [
           typescript({
             cacheRoot: `${tempDir}/.rollup_plugin_typescript2_cache`,
-            tsconfig: join(root, 'tsconfig.json'),
+            tsconfig: join(cwd, 'tsconfig.json'),
             tsconfigDefaults: {
               compilerOptions: {
                 declaration: true,
