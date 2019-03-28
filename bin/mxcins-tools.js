@@ -18,6 +18,11 @@ switch (args._[0]) {
       watch,
     });
     break;
+  case 'doc:dev':
+    require('../lib/doc').dev({
+      cwd,
+    });
+    break;
   default:
     signale.error(`Unknown command ${args._}`);
     break;
