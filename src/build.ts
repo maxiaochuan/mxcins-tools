@@ -12,12 +12,11 @@ import babel from './babel';
 
 export async function build(opts: IOpts) {
   const { cwd, root, watch } = opts;
+  const pkg = getPackage(cwd);
+  // 注册 log prefix;
+  registerPrefix(pkg);
 
   try {
-    const pkg = getPackage(cwd);
-    // 注册 log prefix;
-    registerPrefix(pkg);
-
     // 注册babel 读取配置文件
     registerBabel({ cwd, only: CONFIG_FILES });
 
