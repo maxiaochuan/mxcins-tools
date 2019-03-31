@@ -117,6 +117,7 @@ export default function getRollupConfig(opts: IGetRollupConfigOpts): RollupOptio
         plugins,
         output: {
           format,
+          exports: config.outputExports,
           file: join(cwd, `dist/${(config.esm && config.esm.name) || fname}.esm.js`),
         },
       };
