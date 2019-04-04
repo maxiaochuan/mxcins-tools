@@ -3,6 +3,8 @@
  * 构建方式 单一文件: singular，多文件: plural，按需加载: dynamic,
  */
 
+export type BundleType = 'esm' | 'cjs' | 'umd';
+
 type Singular = 'singular'; // rollup
 type Plural = 'plural';
 type Dynamic = 'dynamic';
@@ -28,32 +30,39 @@ export type UmdType = Singular;
 
 export interface IEsm {
   type: EsmType;
+  name?: string;
 }
 
 export interface ICjs {
   type: CjsType;
+  name?: string;
 }
 
 export interface IUmd {
   type: UmdType;
+  name?: string;
+  globals: { [x: string]: string };
 }
 
 export interface IBuildConf {
-  entry?: string | string[];
+  entry?: string;
   esm?: EsmType | IEsm;
   cjs?: CjsType | ICjs;
   umd?: UmdType | IUmd;
   runtimeHelpers?: boolean;
+  outputExports?: 'default' | 'named' | 'none' | 'auto';
 }
 
-export interface IFormattedBuildConf {
-  entry?: string | string[];
+export interface IFormattedBuildConf extends IBuildConf {
   esm?: IEsm;
   cjs?: ICjs;
   umd?: IUmd;
-  runtimeHelpers?: boolean;
+  pkg: IPackage;
 }
 
 export interface IBuildOpts {
   cwd: string;
+  watch?: boolean;
+  root?: string;
+  isLerna?: boolean;
 }
