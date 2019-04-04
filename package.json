@@ -44,13 +44,25 @@
     "**/*.{ts,tsx}": "yarn lint-staged:ts"
   },
   "dependencies": {
+    "@babel/core": "7.4.3",
+    "@babel/plugin-proposal-class-properties": "7.4.0",
+    "@babel/plugin-proposal-export-default-from": "7.2.0",
+    "@babel/plugin-transform-runtime": "7.4.3",
+    "@babel/preset-env": "7.4.3",
+    "@babel/preset-react": "7.0.0",
+    "@babel/preset-typescript": "7.3.3",
+    "@babel/register": "7.4.0",
     "@types/prettier": "^1.16.1",
     "prettier": "^1.16.4",
+    "rollup": "^1.8.0",
     "signale": "^1.4.0",
     "typescript": "^3.4.1"
   },
   "devDependencies": {
+    "@types/assert": "^1.4.2",
     "@types/signale": "^1.2.1",
+    "assert": "^1.4.1",
+    "husky": "^1.3.1",
     "lint-staged": "^8.1.5",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
