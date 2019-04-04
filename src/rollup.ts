@@ -1,55 +1,35 @@
 import assert from 'assert';
-import { copyFileSync } from 'fs';
-import { dirname, join } from 'path';
-import isRoot from 'path-is-root';
+import { extname, join } from 'path';
 import rimraf from 'rimraf';
 import { rollup, watch } from 'rollup';
+import { ENTRY_FILES } from './constants';
 import getRollupConfig from './getRollupConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf } from './types';
-import { getExistFilePath, registerUpdate, signale } from './utils';
+import { generateTsConfig, getExistFilePath, IFilePath, registerUpdate, signale } from './utils';
 
-function generateTsConfig(opts: IBuildOpts) {
-  const { cwd } = opts;
-
-  const tsConfigPath = getExistFilePath({ cwd, files: ['tsconfig.json'] });
-  if (tsConfigPath) {
-    return false;
+function getEntry(conf: IFormattedBuildConf, opts: IBuildOpts) {
+  if (conf.entry) {
+    return conf.entry;
   }
+  const entryPath = getExistFilePath({ cwd: opts.cwd, files: ENTRY_FILES });
 
-  let currentPath = cwd;
+  assert.ok(entryPath, 'entry must be exit!');
 
-  let topTsConfigPath: string = '';
-  while (!topTsConfigPath && !isRoot(cwd)) {
-    const p = getExistFilePath({ cwd: currentPath, files: ['tsconfig.json'] });
-    if (p) {
-      topTsConfigPath = p.abs;
-    }
-    currentPath = dirname(currentPath);
-  }
-
-  if (!topTsConfigPath) {
-    assert.ok(topTsConfigPath, 'Tsconfig.json must be exit.');
-    return;
-  }
-  copyFileSync(topTsConfigPath, join(cwd, 'tsconfig.json'));
-
-  if (opts.watch) {
-    process.on('SIGINT', () => {
-      signale.note('SIGINT: rm tsconfig.json');
-      rimraf.sync(join(cwd, 'tsconfig.json'));
-    });
-  } else {
-    process.on('exit', () => {
-      rimraf.sync(join(cwd, 'tsconfig.json'));
-    });
-  }
-
-  return false;
+  return (entryPath as IFilePath).relative;
 }
 
 export default async function build(type: BundleType, conf: IFormattedBuildConf, opts: IBuildOpts) {
-  generateTsConfig(opts);
-  const rollupConfig = getRollupConfig(type, conf, opts);
+  const entry = getEntry(conf, opts);
+  const rollupConfig = getRollupConfig(type, entry, conf, opts);
+  const isTs = ['.ts', '.tsx'].includes(extname(entry));
+
+  if (isTs) {
+    generateTsConfig(opts);
+  }
+
+  signale.info(`Clear dist directory`);
+  const targetPath = join(opts.cwd, 'dist');
+  rimraf.sync(targetPath);
 
   if (opts.watch) {
     const watcher = watch([

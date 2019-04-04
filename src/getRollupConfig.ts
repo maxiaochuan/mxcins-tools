@@ -1,4 +1,3 @@
-import assert from 'assert';
 import autoprefixer from 'autoprefixer';
 import { basename, extname, join } from 'path';
 import babel from 'rollup-plugin-babel';
@@ -9,21 +8,8 @@ import typescript from 'rollup-plugin-typescript2';
 import tempDir from 'temp-dir';
 
 import { IsExternal } from 'rollup';
-import { ENTRY_FILES } from './constants';
 import getBabelConfig from './getBabelConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf, IPackage, IUmd } from './types';
-import { getExistFilePath, IFilePath } from './utils';
-
-function getEntry(conf: IFormattedBuildConf, opts: IBuildOpts) {
-  if (conf.entry) {
-    return conf.entry;
-  }
-  const entryPath = getExistFilePath({ cwd: opts.cwd, files: ENTRY_FILES });
-
-  assert.ok(entryPath, 'entry must be exit!');
-
-  return (entryPath as IFilePath).relative;
-}
 
 function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
   const names = [
@@ -40,13 +26,13 @@ function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
 
 export default function getRollupConfig(
   type: BundleType,
+  entry: string,
   conf: IFormattedBuildConf,
   opts: IBuildOpts,
 ) {
   // runtimeHelpers
   const runtimeHelpers = type === 'cjs' ? false : conf.runtimeHelpers;
-  // input;
-  const input = getEntry(conf, opts);
+  const input = entry;
   // ts
   const isTs = ['.ts', '.tsx'].includes(extname(input));
   // babel

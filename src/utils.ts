@@ -1,9 +1,12 @@
-import { existsSync, readFileSync, writeFileSync } from 'fs';
-import { join } from 'path';
+import assert from 'assert';
+import { copyFileSync, existsSync, readFileSync, writeFileSync } from 'fs';
+import { dirname, join } from 'path';
+import isRoot from 'path-is-root';
 import prettier from 'prettier';
+import rimraf from 'rimraf';
 import si, { DefaultMethods, Signale } from 'signale';
 import sort from 'sort-package-json';
-import { BundleType, IPackage } from './types';
+import { BundleType, IBuildOpts, IPackage } from './types';
 
 export function getPackageJson(cwd: string): IPackage {
   const pkgPath = join(cwd, 'package.json');
@@ -87,4 +90,43 @@ export function updatePackage(cwd: string) {
   );
   signale.info('Updated Package.json');
   updated = {};
+}
+
+export function generateTsConfig(opts: IBuildOpts) {
+  const { cwd } = opts;
+
+  const tsConfigPath = getExistFilePath({ cwd, files: ['tsconfig.json'] });
+  if (tsConfigPath) {
+    return false;
+  }
+
+  let currentPath = cwd;
+
+  let topTsConfigPath: string = '';
+  while (!topTsConfigPath && !isRoot(cwd)) {
+    const p = getExistFilePath({ cwd: currentPath, files: ['tsconfig.json'] });
+    if (p) {
+      topTsConfigPath = p.abs;
+    }
+    currentPath = dirname(currentPath);
+  }
+
+  if (!topTsConfigPath) {
+    assert.ok(topTsConfigPath, 'Tsconfig.json must be exit.');
+    return;
+  }
+  copyFileSync(topTsConfigPath, join(cwd, 'tsconfig.json'));
+
+  if (opts.watch) {
+    process.on('SIGINT', () => {
+      signale.note('SIGINT: rm tsconfig.json');
+      rimraf.sync(join(cwd, 'tsconfig.json'));
+    });
+  } else {
+    process.on('exit', () => {
+      rimraf.sync(join(cwd, 'tsconfig.json'));
+    });
+  }
+
+  return false;
 }

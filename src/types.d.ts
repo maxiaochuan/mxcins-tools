@@ -50,6 +50,7 @@ export interface IBuildConf {
   cjs?: CjsType | ICjs;
   umd?: UmdType | IUmd;
   runtimeHelpers?: boolean;
+  browserFiles?: string[];
   outputExports?: 'default' | 'named' | 'none' | 'auto';
 }
 

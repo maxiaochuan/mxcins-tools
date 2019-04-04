@@ -1,7 +1,8 @@
-type ModuleFormat = 'esm' | 'cjs' | 'umd';
+import { BundleType } from './types';
+
 export interface IGetBabelConfigOptions {
   target: 'browser' | 'node';
-  type?: ModuleFormat;
+  type: BundleType;
   typescript?: boolean;
   runtimeHelpers?: boolean;
 }
