@@ -7,6 +7,21 @@ type Singular = 'singular'; // rollup
 type Plural = 'plural';
 type Dynamic = 'dynamic';
 
+export interface IPackage {
+  dependencies?: object;
+  peerDependencies?: object;
+  name: string;
+  main?: string;
+  ['umd:main']?: string;
+  unpkg: string;
+  module?: string;
+  source?: string;
+  ['jsnext:main']?: string;
+  browser?: string;
+  sideEffects?: boolean;
+  types?: string;
+}
+
 export type EsmType = Singular | Plural | Dynamic;
 export type CjsType = Singular | Plural;
 export type UmdType = Singular
@@ -24,9 +39,10 @@ export interface IUmd {
 }
 
 export interface IBuildConfig {
-  esm: EsmType | IEsm;
-  cjs: CjsType | ICjs;
-  umd: UmdType | IUmd;
+  entry?: string | string[];
+  esm?: EsmType | IEsm;
+  cjs?: CjsType | ICjs;
+  umd?: UmdType | IUmd;
 }
 
 export interface IBuildOpts {
