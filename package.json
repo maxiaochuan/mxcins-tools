@@ -59,6 +59,7 @@
     "typescript": "^3.4.1"
   },
   "devDependencies": {
+    "@babel/cli": "^7.4.3",
     "@types/assert": "^1.4.2",
     "@types/signale": "^1.2.1",
     "assert": "^1.4.1",
@@ -66,7 +67,8 @@
     "lint-staged": "^8.1.5",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
-    "tslint-react": "^3.6.0"
+    "tslint-react": "^3.6.0",
+    "yargs-parser": "^13.0.0"
   },
   "publishConfig": {
     "access": "public"
