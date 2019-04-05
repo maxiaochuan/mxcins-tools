@@ -1,22 +1,9 @@
-import assert from 'assert';
 import { extname, join } from 'path';
 import rimraf from 'rimraf';
 import { rollup, watch } from 'rollup';
-import { ENTRY_FILES } from './constants';
 import getRollupConfig from './getRollupConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf } from './types';
-import { generateTsConfig, getExistFilePath, IFilePath, registerUpdate, signale } from './utils';
-
-function getEntry(conf: IFormattedBuildConf, opts: IBuildOpts) {
-  if (conf.entry) {
-    return conf.entry;
-  }
-  const entryPath = getExistFilePath({ cwd: opts.cwd, files: ENTRY_FILES });
-
-  assert.ok(entryPath, 'entry must be exit!');
-
-  return (entryPath as IFilePath).relative;
-}
+import { generateTsConfig, getEntry, signale } from './utils';
 
 export default async function build(type: BundleType, conf: IFormattedBuildConf, opts: IBuildOpts) {
   const entry = getEntry(conf, opts);
@@ -53,7 +40,6 @@ export default async function build(type: BundleType, conf: IFormattedBuildConf,
     if (output) {
       await bundle.write(output);
       const f = (output.file as string).replace(`${opts.cwd}/`, '');
-      registerUpdate(opts.cwd, type, f);
       signale.info(`rollup -> ${f}`);
     }
   }

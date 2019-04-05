@@ -10,6 +10,7 @@ import tempDir from 'temp-dir';
 import { IsExternal } from 'rollup';
 import getBabelConfig from './getBabelConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf, IPackage, IUmd } from './types';
+import { getExport } from './utils';
 
 function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
   const names = [
@@ -49,9 +50,6 @@ export default function getRollupConfig(
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.es6', '.es', '.mjs'],
   };
 
-  // 输入文件名称(默认值)
-  const fname = basename(input).replace(extname(input), '');
-
   const format = type;
   const external = generateExternal(conf.pkg, runtimeHelpers);
 
@@ -86,6 +84,7 @@ export default function getRollupConfig(
   ];
 
   const { cwd } = opts;
+  const name = getExport(type, conf, opts);
 
   switch (type) {
     case 'esm':
@@ -96,7 +95,7 @@ export default function getRollupConfig(
         output: {
           format,
           exports: conf.outputExports,
-          file: join(cwd, `dist/${(conf.esm && conf.esm.name) || fname}.esm.js`),
+          file: join(cwd, name),
         },
       };
     case 'cjs':
@@ -107,7 +106,7 @@ export default function getRollupConfig(
         output: {
           format,
           exports: conf.outputExports,
-          file: join(cwd, `dist/${(conf.esm && conf.esm.name) || fname}.cjs.js`),
+          file: join(cwd, name),
         },
       };
     case 'umd':
@@ -135,8 +134,8 @@ export default function getRollupConfig(
           format,
           exports: conf.outputExports,
           globals: (conf.umd as IUmd).globals,
-          name: (conf.umd && conf.umd.name) || fname,
-          file: join(cwd, `dist/${(conf.umd && conf.umd.name) || fname}.umd.js`),
+          name: conf.umd && conf.umd.name,
+          file: join(cwd, name),
         },
       };
     default:

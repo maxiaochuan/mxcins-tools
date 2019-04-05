@@ -40,18 +40,19 @@ export interface ICjs {
 
 export interface IUmd {
   type: UmdType;
-  name?: string;
-  globals: { [x: string]: string };
+  name: string;
+  globals?: { [x: string]: string };
 }
 
 export interface IBuildConf {
   entry?: string;
-  esm?: EsmType | IEsm;
-  cjs?: CjsType | ICjs;
-  umd?: UmdType | IUmd;
+  esm?: IEsm | EsmType;
+  cjs?: ICjs | CjsType;
+  umd?: IUmd;
   runtimeHelpers?: boolean;
   browserFiles?: string[];
   outputExports?: 'default' | 'named' | 'none' | 'auto';
+  typings?: string;
 }
 
 export interface IFormattedBuildConf extends IBuildConf {

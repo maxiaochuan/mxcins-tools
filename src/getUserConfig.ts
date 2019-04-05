@@ -49,7 +49,7 @@ export default (pkg: IPackage, opts: IBuildOpts): IFormattedBuildConf => {
     ...conf,
     esm: typeof conf.esm === 'string' ? { type: conf.esm } : conf.esm,
     cjs: typeof conf.cjs === 'string' ? { type: conf.cjs } : conf.cjs,
-    umd: typeof conf.umd === 'string' ? { type: conf.umd, globals: {} } : conf.umd,
+    umd: conf.umd,
     pkg,
   };
 };
