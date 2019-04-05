@@ -9,7 +9,7 @@ import slash from 'slash2';
 import through from 'through2';
 import getBabelConfig from './getBabelConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf } from './types';
-import { generateTsConfig, signale } from './utils';
+import { generateTsConfig, getEntry, signale } from './utils';
 
 function transform(
   type: BundleType,
@@ -59,7 +59,7 @@ function createStream(
 export default async function build(type: BundleType, conf: IFormattedBuildConf, opts: IBuildOpts) {
   const { cwd, watch } = opts;
 
-  const srcPath = join(cwd, conf.entry || 'src');
+  const srcPath = getEntry(conf, opts);
   assert.ok(statSync(srcPath).isDirectory(), 'Babel entry MUST be a directory.');
 
   generateTsConfig(opts);
@@ -72,12 +72,8 @@ export default async function build(type: BundleType, conf: IFormattedBuildConf,
 
   const src = [
     join(srcPath, '**/*.{js,ts,jsx,tsx}'),
-    `!${join(srcPath, '**/fixtures/**/*')}`,
-    `!${join(srcPath, '**/.umi/**/*')}`,
-    `!${join(srcPath, '**/.umi-production/**/*')}`,
-    `!${join(srcPath, '**/*.test.js')}`,
-    `!${join(srcPath, '**/*.e2e.js')}`,
-    `!${join(srcPath, 'pages/**/*')}`,
+    `!${join(srcPath, '**/*.test.{js,ts}')}`,
+    `!${join(srcPath, '**/*.e2e.{js,ts}')}`,
   ];
 
   return new Promise((resolve, reject) => {

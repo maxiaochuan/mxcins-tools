@@ -4,14 +4,14 @@ import { basename, dirname, extname, join } from 'path';
 import isRoot from 'path-is-root';
 import rimraf from 'rimraf';
 import si, { DefaultMethods, Signale } from 'signale';
-import { ENTRY_FILES } from './constants';
+import { ENTREY_DIRS, ENTRY_FILES } from './constants';
 import { BundleType, IBuildOpts, IFormattedBuildConf, IPackage } from './types';
 
-export function getEntry(conf: IFormattedBuildConf, opts: IBuildOpts) {
+export function getEntry(conf: IFormattedBuildConf, opts: IBuildOpts, dir?: boolean) {
   if (conf.entry) {
     return conf.entry;
   }
-  const entryPath = getExistFilePath({ cwd: opts.cwd, files: ENTRY_FILES });
+  const entryPath = getExistFilePath({ cwd: opts.cwd, files: dir ? ENTREY_DIRS : ENTRY_FILES });
   assert.ok(entryPath, 'entry must be exit!');
   return (entryPath as IFilePath).relative;
 }
