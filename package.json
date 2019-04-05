@@ -60,6 +60,7 @@
     "gulp": "^4.0.0",
     "gulp-babel": "^8.0.0",
     "gulp-typescript": "^5.0.1",
+    "less": "^3.9.0",
     "path-is-root": "^0.1.0",
     "prettier": "^1.16.4",
     "resolve-bin": "^0.4.0",
