@@ -87,6 +87,7 @@
     "assert": "^1.4.1",
     "husky": "^1.3.1",
     "lint-staged": "^8.1.5",
+    "np": "^4.0.2",
     "tslint": "^5.12.1",
     "tslint-config-prettier": "^1.17.0",
     "tslint-react": "^3.6.0",
