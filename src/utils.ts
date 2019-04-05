@@ -61,7 +61,7 @@ export const signale: Signale & {
   init: (pkg?: IPackage) => void;
   changeType: (str: string) => void;
   name?: string;
-  type?: BundleType | 'package.json';
+  type?: BundleType | 'package.json' | '';
 } = {
   name: '',
   type: '',

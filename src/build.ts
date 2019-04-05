@@ -25,6 +25,7 @@ async function build(opts: IBuildOpts) {
     const conf = getUserConfig(pkg, opts);
 
     // 2019-04-05 18:14:16 fix bug 多种构建会被删除 所以移动到上层
+    signale.type = '';
     signale.info(`Clear dist directory`);
     const targetPath = join(opts.cwd, 'dist');
     rimraf.sync(targetPath);
