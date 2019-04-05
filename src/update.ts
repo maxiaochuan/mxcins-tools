@@ -3,9 +3,10 @@ import { writeFileSync } from 'fs';
 import { join } from 'path';
 import prettier from 'prettier';
 import sort from 'sort-package-json';
+import { TYPE_FILES } from './constants';
 import getUserConfig from './getUserConfig';
 import { IBuildOpts } from './types';
-import { getExport, getPackageJson, signale } from './utils';
+import { getExistFilePath, getExport, getPackageJson, signale } from './utils';
 
 export default function update(opts: IBuildOpts) {
   try {
@@ -50,7 +51,18 @@ export default function update(opts: IBuildOpts) {
 
     const anyone = esm || umd || cjs;
     if (anyone) {
-      (pkg.types = conf.typings || anyone.replace(/\.(esm|umd|cjs)\.js/, '.d.ts')) &&
+      // const typeFilePath = getExistFilePath({ cwd, files: [
+      //   ...TYPE_FILES,
+      // ] })
+      const typeFilePath = getExistFilePath({
+        cwd: opts.cwd,
+        files: [
+          ...(conf.types ? [conf.types] : []),
+          anyone.replace(/\.(esm|umd|cjs)/, '').replace(/\.js/, '.d.ts'),
+          ...TYPE_FILES,
+        ],
+      });
+      (pkg.types = (typeFilePath && typeFilePath.relative) || undefined) &&
         signale.info(`types: ${pkg.types}`);
     }
     writeFileSync(

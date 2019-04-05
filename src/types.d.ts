@@ -52,7 +52,7 @@ export interface IConfig {
   runtimeHelpers?: boolean;
   browserFiles?: string[];
   outputExports?: 'default' | 'named' | 'none' | 'auto';
-  typings?: string;
+  types?: string | false;
 }
 
 export interface IFormattedBuildConf extends IConfig {
