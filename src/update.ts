@@ -34,7 +34,8 @@ export default function update(opts: IBuildOpts) {
     }
 
     const { umd, cjs, esm } = infos;
-    (pkg.main = umd || cjs || esm || pkg.main) && signale.info(`main: ${pkg.main}`);
+    // 2019-04-05 18:48:41 修改优先级 cjs > umd > pkg.main;
+    (pkg.main = cjs || umd || pkg.main || esm) && signale.info(`main: ${pkg.main}`);
     (pkg['umd:main'] = umd) && signale.info(`umd:main: ${pkg['umd:main']}`);
     (pkg.module = esm) && signale.info(`module: ${pkg.module}`);
     // pkg.source = esm || cjs || umd;
