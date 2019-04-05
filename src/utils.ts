@@ -24,6 +24,9 @@ export function getExport(
 ) {
   const entry = getEntry(conf, opts);
   const fname = basename(entry).replace(extname(entry), '');
+  if (dir === 'lib' || dir === 'es') {
+    return `${dir}/${(conf[type] && (conf[type] as any).name) || fname}.js`;
+  }
   return `${dir}/${(conf[type] && (conf[type] as any).name) || fname}.${type}.js`;
 }
 
