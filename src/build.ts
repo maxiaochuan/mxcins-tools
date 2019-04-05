@@ -14,9 +14,9 @@ export default async function build(opts: IBuildOpts) {
 
     if (conf.esm) {
       signale.start(`[esm] Building...`);
-      if (conf.esm.type === 'singular') {
+      if (conf.esm.type === 'single') {
         await rollup('esm', conf, opts);
-      } else if (conf.esm.type === 'plural') {
+      } else if (conf.esm.type === 'multiple') {
         await babel('esm', conf, opts);
       } else if (conf.esm.type === 'dynamic') {
         signale.note('//TODO: dynamic');
@@ -26,9 +26,9 @@ export default async function build(opts: IBuildOpts) {
 
     if (conf.cjs) {
       signale.start(`[cjs] Building...`);
-      if (conf.cjs.type === 'singular') {
+      if (conf.cjs.type === 'single') {
         await rollup('cjs', conf, opts);
-      } else if (conf.cjs.type === 'plural') {
+      } else if (conf.cjs.type === 'multiple') {
         await babel('esm', conf, opts);
       }
       signale.complete('[cjs] building complete.');
@@ -36,7 +36,7 @@ export default async function build(opts: IBuildOpts) {
 
     if (conf.umd) {
       signale.start(`[umd] Building...`);
-      if (conf.umd.type === 'singular') {
+      if (conf.umd.type === 'single') {
         await rollup('umd', conf, opts);
       }
       signale.complete('[umd] building complete.');

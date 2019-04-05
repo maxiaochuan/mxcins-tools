@@ -5,8 +5,8 @@
 
 export type BundleType = 'esm' | 'cjs' | 'umd';
 
-type Singular = 'singular'; // rollup
-type Plural = 'plural';
+type Singular = 'single'; // rollup
+type Plural = 'multiple';
 type Dynamic = 'dynamic';
 
 export interface IPackage {
