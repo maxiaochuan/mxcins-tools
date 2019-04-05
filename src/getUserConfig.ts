@@ -2,7 +2,7 @@ import assert from 'assert';
 import { join } from 'path';
 import { CONFIG_FILES } from './constants';
 import getBabelConfig from './getBabelConfig';
-import { IBuildConf, IBuildOpts, IFormattedBuildConf, IPackage } from './types';
+import { IBuildOpts, IConfig, IFormattedBuildConf, IPackage } from './types';
 import { getExistFilePath, IFilePath } from './utils';
 
 /**
@@ -32,7 +32,7 @@ const d = <T>(o: any): T => o.default || o;
 
 export default (pkg: IPackage, opts: IBuildOpts): IFormattedBuildConf => {
   const rcPath = getRcPath(opts);
-  const conf: IBuildConf = d(require(rcPath.abs));
+  const conf: IConfig = d(require(rcPath.abs));
 
   /**
    * Runtime Helper Check

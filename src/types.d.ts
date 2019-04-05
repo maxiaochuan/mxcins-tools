@@ -44,7 +44,7 @@ export interface IUmd {
   globals?: { [x: string]: string };
 }
 
-export interface IBuildConf {
+export interface IConfig {
   entry?: string;
   esm?: IEsm | EsmType;
   cjs?: ICjs | CjsType;
@@ -55,7 +55,7 @@ export interface IBuildConf {
   typings?: string;
 }
 
-export interface IFormattedBuildConf extends IBuildConf {
+export interface IFormattedBuildConf extends IConfig {
   esm?: IEsm;
   cjs?: ICjs;
   umd?: IUmd;

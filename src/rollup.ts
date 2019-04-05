@@ -1,5 +1,4 @@
-import { extname, join } from 'path';
-import rimraf from 'rimraf';
+import { extname } from 'path';
 import { rollup, watch } from 'rollup';
 import getRollupConfig from './getRollupConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf } from './types';
@@ -13,10 +12,6 @@ export default async function build(type: BundleType, conf: IFormattedBuildConf,
   if (isTs) {
     generateTsConfig(opts);
   }
-
-  signale.info(`Clear dist directory`);
-  const targetPath = join(opts.cwd, 'dist');
-  rimraf.sync(targetPath);
 
   if (opts.watch) {
     const watcher = watch([
