@@ -13,17 +13,14 @@ if (args.v || args.version) {
 
 const cwd = process.cwd();
 const watch = args.w || args.watch;
+const update = args.update;
 
 switch (args._[0]) {
-  case 'update':
-    require('../lib/update').default({
-      cwd,
-    });
-    break;
   case 'build':
     require(`../lib/build`).default({
       cwd,
       watch,
+      update,
     });
     break;
   case 'dev':

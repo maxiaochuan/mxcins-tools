@@ -67,4 +67,5 @@ export interface IBuildOpts {
   watch?: boolean;
   root?: string;
   isLerna?: boolean;
+  update?: boolean;
 }

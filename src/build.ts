@@ -10,6 +10,7 @@ import { getPackageJson, signale } from './utils';
 import babel from './babel';
 import gulp from './gulp';
 import rollup from './rollup';
+import update from './update';
 
 async function build(opts: IBuildOpts) {
   try {
@@ -61,6 +62,10 @@ async function build(opts: IBuildOpts) {
         await rollup('umd', conf, opts);
       }
       signale.complete('Building Complete.\n\n');
+    }
+
+    if (opts.update) {
+      update(opts);
     }
   } catch (error) {
     // tslint:disable-next-line:no-console
