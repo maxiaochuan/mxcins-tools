@@ -3,7 +3,7 @@ declare module 'rollup-plugin-node-resolve';
 declare module 'rollup-plugin-commonjs';
 declare module 'rollup-plugin-postcss';
 declare module 'autoprefixer';
-// declare module 'lodash.merge';
+declare module 'resolve-bin';
 declare module '@babel/core';
 declare module 'slash2';
 declare module 'sort-package-json';

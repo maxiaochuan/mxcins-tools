@@ -48,7 +48,7 @@ export default async function build(type: BundleType, conf: IFormattedBuildConf,
     });
   } else {
     const { output, ...input } = rollupConfig;
-    signale.info(`rollup <- ${input.input}`);
+    signale.await(`rollup <- ${input.input}`);
     const bundle = await rollup(input);
     if (output) {
       await bundle.write(output);

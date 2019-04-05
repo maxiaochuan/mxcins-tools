@@ -21,7 +21,13 @@ switch (args._[0]) {
       watch,
     });
     break;
+  case 'dev':
+    require('../lib/build').default({
+      cwd,
+      watch: true,
+    });
   case 'doc:dev':
+  case 'docdev':
     require('../lib/doc').dev({
       cwd,
     });
