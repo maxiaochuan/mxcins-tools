@@ -81,7 +81,7 @@ async function buildTs(
 
 export default async function build(type: BundleType, conf: IFormattedBuildConf, opts: IBuildOpts) {
   const { cwd } = opts;
-  const srcDir = getEntry(conf, opts);
+  const srcDir = getEntry(conf, opts, true);
   assert.ok(statSync(srcDir).isDirectory(), 'Babel entry MUST be a directory.');
   const targetDir = 'es';
 

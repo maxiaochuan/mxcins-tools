@@ -84,6 +84,7 @@ const types: DefaultMethods[] = [
 ];
 
 export function generateTsConfig(opts: IBuildOpts) {
+  signale.info('generate tsconfig.json');
   const { cwd } = opts;
 
   const tsConfigPath = getExistFilePath({ cwd, files: ['tsconfig.json'] });
