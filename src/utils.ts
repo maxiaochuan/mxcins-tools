@@ -83,6 +83,7 @@ const types: DefaultMethods[] = [
   'complete',
   'watch',
   'note',
+  'warn',
   'await',
 ];
 

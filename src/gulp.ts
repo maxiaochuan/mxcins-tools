@@ -2,7 +2,7 @@ import assert from 'assert';
 import { readFileSync, statSync } from 'fs';
 import gulp from 'gulp';
 import babel from 'gulp-babel';
-import typescript from 'gulp-typescript';
+import typescript, { CompileStream } from 'gulp-typescript';
 import { join } from 'path';
 import rimraf from 'rimraf';
 import getBabelConfig from './getBabelConfig';
@@ -53,7 +53,7 @@ async function buildTs(
   conf: IFormattedBuildConf,
   opts: IBuildOpts,
 ) {
-  signale.await('Copy Assets...');
+  signale.await('Building ts...');
   const source = [
     `${srcDir}/**/*.tsx`,
     `${srcDir}/**/*.ts`,
@@ -68,15 +68,36 @@ async function buildTs(
     typescript: true,
     runtimeHelpers: conf.runtimeHelpers,
   });
-  return new Promise((resolve, reject) => {
-    gulp
-      .src(source)
-      .pipe(typescript(tsConf))
-      .pipe(babel(babelConf))
-      .pipe(gulp.dest(targetDir))
-      .on('finish', () => resolve())
-      .on('error', (e: Error) => reject(e));
-  });
+
+  const main = () =>
+    new Promise<CompileStream>((resolve, reject) => {
+      const tsResult = gulp
+        .src(source)
+        .pipe(typescript(tsConf))
+        .on('error', e => reject(e))
+        .on('finish', () => resolve(tsResult));
+    });
+
+  const js = (s: CompileStream) =>
+    new Promise((resolve, reject) => {
+      s.js
+        .pipe(babel(babelConf))
+        .pipe(gulp.dest(targetDir))
+        .on('error', (e: Error) => reject(e))
+        .on('finish', () => resolve());
+    });
+
+  const dts = (s: CompileStream) =>
+    new Promise((resolve, reject) => {
+      s.dts
+        .pipe(gulp.dest(targetDir))
+        .on('error', (e: Error) => reject(e))
+        .on('finish', () => resolve());
+    });
+
+  const stream = await main();
+  await dts(stream);
+  await js(stream);
 }
 
 export default async function build(type: BundleType, conf: IFormattedBuildConf, opts: IBuildOpts) {
@@ -90,9 +111,11 @@ export default async function build(type: BundleType, conf: IFormattedBuildConf,
 
   generateTsConfig(opts);
   try {
-    await buildLess(srcDir, targetDir);
-    await copyAssets(srcDir, targetDir);
-    await buildTs(srcDir, targetDir, type, conf, opts);
+    await Promise.all([
+      buildLess(srcDir, targetDir),
+      copyAssets(srcDir, targetDir),
+      buildTs(srcDir, targetDir, type, conf, opts),
+    ]);
     signale.complete('Dynamic Build Success');
   } catch (error) {
     throw error;

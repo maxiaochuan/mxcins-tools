@@ -22,11 +22,10 @@ async function build(opts: IBuildOpts) {
      * 初始化 signale
      */
     signale.init(pkg);
-
     const conf = getUserConfig(pkg, opts);
 
     if (!conf) {
-      signale.note('Config file does not exist, skip project!');
+      signale.warn('Config file does not exist, skip project!\n\n');
       return;
     }
 
@@ -74,8 +73,7 @@ async function build(opts: IBuildOpts) {
     }
   } catch (error) {
     // tslint:disable-next-line:no-console
-    console.log(error);
-    process.exit(1);
+    signale.error(error);
   }
 }
 
