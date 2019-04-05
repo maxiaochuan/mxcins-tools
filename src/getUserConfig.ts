@@ -3,7 +3,7 @@ import { join } from 'path';
 import { CONFIG_FILES } from './constants';
 import getBabelConfig from './getBabelConfig';
 import { IBuildOpts, IConfig, IFormattedBuildConf, IPackage } from './types';
-import { getExistFilePath, IFilePath } from './utils';
+import { getExistFilePath } from './utils';
 
 /**
  * 获取配置文件路径
@@ -23,15 +23,17 @@ export function getRcPath(opts: IBuildOpts) {
   });
 
   const filePath = getExistFilePath({ cwd, files: CONFIG_FILES });
-  assert.ok(filePath, 'Config file must be exit.');
 
-  return filePath as IFilePath;
+  return filePath;
 }
 
 const d = <T>(o: any): T => o.default || o;
 
-export default (pkg: IPackage, opts: IBuildOpts): IFormattedBuildConf => {
+export default (pkg: IPackage, opts: IBuildOpts): IFormattedBuildConf | false => {
   const rcPath = getRcPath(opts);
+  if (!rcPath) {
+    return false;
+  }
   const conf: IConfig = d(require(rcPath.abs));
 
   /**
