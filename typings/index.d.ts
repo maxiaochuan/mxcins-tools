@@ -9,3 +9,4 @@ declare module 'slash2';
 declare module 'sort-package-json';
 declare module 'path-is-root';
 declare module 'temp-dir';
+declare module 'gulp-babel';

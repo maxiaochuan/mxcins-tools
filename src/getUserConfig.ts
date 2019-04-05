@@ -12,7 +12,7 @@ import { getExistFilePath, IFilePath } from './utils';
 export function getRcPath(opts: IBuildOpts) {
   const { cwd } = opts;
 
-  const config = getBabelConfig({ target: 'node', typescript: true });
+  const config = getBabelConfig({ target: 'node', type: 'cjs', typescript: true });
 
   require('@babel/register')({
     ...config,

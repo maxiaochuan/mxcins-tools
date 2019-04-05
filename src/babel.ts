@@ -21,12 +21,7 @@ function transform(
   const { browserFiles = [] } = conf;
 
   const isBrowser = browserFiles.includes(slash(f.path).replace(`${cwd}/`, ''));
-  signale.info(
-    `[${type}] Babel Transform: ${isBrowser ? 'browser' : 'node'} ${slash(f.path).replace(
-      `${cwd}/`,
-      '',
-    )}`,
-  );
+  signale.info(`[${isBrowser ? 'browser' : 'node'}] ${slash(f.path).replace(`${cwd}/`, '')}`);
 
   const babelConfig = getBabelConfig({
     target: isBrowser ? 'browser' : 'node',

@@ -38,11 +38,18 @@ export function getExistFilePath({
   return null;
 }
 
-export const signale: Signale & { init: (pkg?: IPackage) => void } = {
+export const signale: Signale & {
+  init: (pkg?: IPackage) => void;
+  changeType: (str: string) => void;
+  name?: string;
+  type?: BundleType;
+} = {
+  name: '',
+  type: '',
   init(pkg?: IPackage) {
-    const prefix = pkg && pkg.name ? `[${pkg.name}] ` : '';
+    this.name = (pkg && pkg.name) || '';
     types.forEach(t => {
-      this[t] = (message: any) => si[t](`${prefix}${message}`);
+      this[t] = (message: any) => si[t](`[${this.name}] [${this.type}] ${message}`);
     });
   },
 } as any;
