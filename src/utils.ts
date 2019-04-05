@@ -46,7 +46,7 @@ export const signale: Signale & { init: (pkg?: IPackage) => void } = {
     });
   },
 } as any;
-const types: DefaultMethods[] = ['info', 'success', 'start', 'error', 'complete', 'watch'];
+const types: DefaultMethods[] = ['info', 'success', 'start', 'error', 'complete', 'watch', 'note'];
 
 let updated: any = {};
 
