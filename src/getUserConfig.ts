@@ -3,7 +3,7 @@ import { join } from 'path';
 import { CONFIG_FILES } from './constants';
 import getBabelConfig from './getBabelConfig';
 import { IBuildOpts, IConfig, IFormattedBuildConf, IPackage } from './types';
-import { getExistFilePath } from './utils';
+import { getExistPath } from './utils';
 
 /**
  * 获取配置文件路径
@@ -22,7 +22,7 @@ export function getRcPath(opts: IBuildOpts) {
     cache: false,
   });
 
-  const filePath = getExistFilePath({ cwd, files: CONFIG_FILES });
+  const filePath = getExistPath({ cwd, files: CONFIG_FILES });
 
   return filePath;
 }

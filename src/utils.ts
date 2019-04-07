@@ -1,63 +1,65 @@
 import assert from 'assert';
-import { copyFileSync, existsSync, readFileSync } from 'fs';
+import { copyFileSync, existsSync, readFileSync, statSync } from 'fs';
 import { basename, dirname, extname, join } from 'path';
 import isRoot from 'path-is-root';
 import rimraf from 'rimraf';
 import si, { DefaultMethods, Signale } from 'signale';
-import { ENTREY_DIRS, ENTRY_FILES } from './constants';
+import { ENTRY_DIRS, ENTRY_FILES, ROLLUP_OUPUT_DIR } from './constants';
 import { BundleType, IBuildOpts, IFormattedBuildConf, IPackage } from './types';
 
-export function getEntry(conf: IFormattedBuildConf, opts: IBuildOpts, dir?: boolean) {
-  if (conf.entry) {
-    return conf.entry;
-  }
-  const entryPath = getExistFilePath({ cwd: opts.cwd, files: dir ? ENTREY_DIRS : ENTRY_FILES });
-  assert.ok(entryPath, 'entry must be exit!');
-  return (entryPath as IFilePath).relative;
+export interface IPath {
+  abs: string;
+  relative: string;
 }
 
-export function getExport(
+export function getExistPath({
+  cwd,
+  files,
+  dir,
+}: {
+  cwd: string;
+  files: string[];
+  dir?: boolean;
+}): IPath | undefined {
+  for (const file of files) {
+    const absPath = join(cwd, file);
+    if (existsSync(absPath)) {
+      const stat = statSync(absPath);
+      if ((dir && stat.isDirectory()) || (!dir && stat.isFile())) {
+        return { relative: file, abs: absPath };
+      }
+    }
+  }
+  return;
+}
+
+export function getEntry(conf: IFormattedBuildConf, opts: IBuildOpts, dir?: boolean) {
+  const entryPath =
+    conf.entry || getExistPath({ cwd: opts.cwd, files: dir ? ENTRY_DIRS : ENTRY_FILES, dir });
+  assert.ok(entryPath, 'entry must be exit!');
+  const entry = entryPath as IPath;
+
+  return entry.relative;
+}
+
+export function getOutput(
   type: BundleType,
   conf: IFormattedBuildConf,
   opts: IBuildOpts,
-  output: string = 'dist',
+  outputDir: string = ROLLUP_OUPUT_DIR,
 ) {
-  const entry = getEntry(conf, opts, output !== 'dist');
-  const fname = basename(entry).replace(extname(entry), '');
+  const dir = outputDir !== 'dist';
+  const entry = getEntry(conf, opts, dir);
+  const name =
+    (conf[type] && (conf[type] as any).name) || basename(entry).replace(extname(entry), '');
 
-  return `${output}/${(conf[type] && (conf[type] as any).name) || fname}${
-    output === 'lib' || output === 'es' ? '' : `.${type}`
-  }.js`;
+  return `${outputDir}/${name}.${type}.js`;
 }
 
 export function getPackageJson(cwd: string): IPackage {
   const pkgPath = join(cwd, 'package.json');
   const pkg: IPackage = JSON.parse(readFileSync(pkgPath, 'utf-8'));
   return pkg;
-}
-
-export interface IFilePath {
-  abs: string;
-  relative: string;
-}
-
-export function getExistFilePath({
-  cwd,
-  files,
-}: {
-  cwd: string;
-  files: string[];
-}): IFilePath | null {
-  for (const file of files) {
-    const absPath = join(cwd, file);
-    if (existsSync(absPath)) {
-      return {
-        relative: file,
-        abs: absPath,
-      };
-    }
-  }
-  return null;
 }
 
 export const signale: Signale & {
@@ -91,7 +93,7 @@ export function generateTsConfig(opts: IBuildOpts) {
   signale.info('generate tsconfig.json');
   const { cwd } = opts;
 
-  const tsConfigPath = getExistFilePath({ cwd, files: ['tsconfig.json'] });
+  const tsConfigPath = getExistPath({ cwd, files: ['tsconfig.json'] });
   if (tsConfigPath) {
     return false;
   }
@@ -100,7 +102,7 @@ export function generateTsConfig(opts: IBuildOpts) {
 
   let topTsConfigPath: string = '';
   while (!topTsConfigPath && !isRoot(cwd)) {
-    const p = getExistFilePath({ cwd: currentPath, files: ['tsconfig.json'] });
+    const p = getExistPath({ cwd: currentPath, files: ['tsconfig.json'] });
     if (p) {
       topTsConfigPath = p.abs;
     }

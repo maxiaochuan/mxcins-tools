@@ -60,7 +60,6 @@ export default async function build(type: BundleType, conf: IFormattedBuildConf,
   const { cwd, watch } = opts;
 
   const srcPath = getEntry(conf, opts, true);
-  assert.ok(statSync(srcPath).isDirectory(), 'Babel entry MUST be a directory.');
 
   generateTsConfig(opts);
 

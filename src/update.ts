@@ -5,7 +5,17 @@ import prettier from 'prettier';
 import sort from 'sort-package-json';
 import { TYPE_FILES } from './constants';
 import { IBuildOpts, IFormattedBuildConf, IPackage } from './types';
-import { getExistFilePath, getExport, signale } from './utils';
+import { getExistPath, getOutput, signale } from './utils';
+
+const MAYBE_OUTPUT_FILES = ['es/index.js', 'lib/index.js'];
+
+function getMaybeOutput(cwd: string, files: string[]) {
+  const maybe = getExistPath({ cwd, files });
+  if (maybe) {
+    return maybe.relative;
+  }
+  return;
+}
 
 export default function update(pkg: IPackage, conf: IFormattedBuildConf, opts: IBuildOpts) {
   try {
@@ -14,20 +24,20 @@ export default function update(pkg: IPackage, conf: IFormattedBuildConf, opts: I
     const infos: { esm?: string; cjs?: string; umd?: string } = {};
     if (conf.esm) {
       if (conf.esm.type === 'single') {
-        infos.esm = getExport('esm', conf, opts);
+        infos.esm = getOutput('esm', conf, opts);
       } else if (conf.esm.type === 'multiple' || conf.esm.type === 'dynamic') {
-        infos.esm = getExport('esm', conf, opts, 'es');
+        infos.esm = getMaybeOutput(opts.cwd, MAYBE_OUTPUT_FILES);
       }
     }
     if (conf.cjs) {
       if (conf.cjs.type === 'single') {
-        infos.cjs = getExport('cjs', conf, opts);
-        // } else if (conf.cjs.type === 'multiple') {
-        //   infos.cjs = getExport('cjs', conf, opts, 'lib');
+        infos.cjs = getOutput('cjs', conf, opts);
+      } else if (conf.cjs.type === 'multiple') {
+        infos.cjs = getMaybeOutput(opts.cwd, MAYBE_OUTPUT_FILES);
       }
     }
     if (conf.umd) {
-      infos.umd = getExport('umd', conf, opts);
+      infos.umd = getOutput('umd', conf, opts);
     }
 
     const { umd, cjs, esm } = infos;
@@ -35,31 +45,26 @@ export default function update(pkg: IPackage, conf: IFormattedBuildConf, opts: I
     (pkg.main = cjs || umd || pkg.main || esm) && signale.info(`main: ${pkg.main}`);
     (pkg['umd:main'] = umd) && signale.info(`umd:main: ${pkg['umd:main']}`);
     (pkg.module = esm) && signale.info(`module: ${pkg.module}`);
-    // pkg.source = esm || cjs || umd;
+    // TODO: source
     (pkg['jsnext:main'] = esm) && signale.info(`jsnext:main: ${pkg['jsnext:main']}`);
     (pkg.browser = umd) && signale.info(`browser: ${pkg.browser}`);
-    // if (umd) {
-    //   pkg.unpkg = umd;
-    // }
+    // TODO: unpkg
     if (esm) {
       (pkg.sideEffects = true) && signale.info('side effects: true');
     }
 
     const anyone = esm || umd || cjs;
     if (anyone) {
-      // const typeFilePath = getExistFilePath({ cwd, files: [
-      //   ...TYPE_FILES,
-      // ] })
-      const typeFilePath = getExistFilePath({
+      const types = getExistPath({
         cwd: opts.cwd,
         files: [
-          ...(conf.types ? [conf.types] : []),
-          anyone.replace(/\.(esm|umd|cjs)/, '').replace(/\.js/, '.d.ts'),
+          conf.types || anyone.replace(/\.(esm|umd|cjs)/, '').replace(/\.js/, '.d.ts'),
           ...TYPE_FILES,
         ],
       });
-      (pkg.types = (typeFilePath && typeFilePath.relative) || undefined) &&
-        signale.info(`types: ${pkg.types}`);
+      if (types) {
+        (pkg.types = types.relative) && signale.info(`types: ${pkg.types}`);
+      }
     }
     writeFileSync(
       join(opts.cwd, 'package.json'),

@@ -1,5 +1,6 @@
 import autoprefixer from 'autoprefixer';
 import { extname, join } from 'path';
+import { IsExternal } from 'rollup';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
 import nodeResolve from 'rollup-plugin-node-resolve';
@@ -7,10 +8,10 @@ import postcss from 'rollup-plugin-postcss';
 import typescript from 'rollup-plugin-typescript2';
 import tempDir from 'temp-dir';
 
-import { IsExternal } from 'rollup';
+import { ROLLUP_OUPUT_DIR } from './constants';
 import getBabelConfig from './getBabelConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf, IPackage, IUmd } from './types';
-import { getExport } from './utils';
+import { getOutput } from './utils';
 
 function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
   const names = [
@@ -56,7 +57,7 @@ export default function getRollupConfig(
   const plugins = [
     postcss({
       // TODO: css编译之后的路径;
-      extract: 'dist/styles.css',
+      extract: `${ROLLUP_OUPUT_DIR}/styles.css`,
       modules: false,
       namedExports: true,
       use: ['less'],
@@ -83,32 +84,13 @@ export default function getRollupConfig(
     babel(babelConfig),
   ];
 
-  const { cwd } = opts;
-  const name = getExport(type, conf, opts);
+  const file = join(opts.cwd, getOutput(type, conf, opts));
 
   switch (type) {
     case 'esm':
-      return {
-        input,
-        external,
-        plugins,
-        output: {
-          format,
-          exports: conf.outputExports,
-          file: join(cwd, name),
-        },
-      };
+      return { input, external, plugins, output: { file, format, exports: conf.outputExports } };
     case 'cjs':
-      return {
-        input,
-        external,
-        plugins,
-        output: {
-          format,
-          exports: conf.outputExports,
-          file: join(cwd, name),
-        },
-      };
+      return { input, external, plugins, output: { file, format, exports: conf.outputExports } };
     case 'umd':
       plugins.push(
         nodeResolve({
@@ -131,11 +113,11 @@ export default function getRollupConfig(
         ],
         plugins,
         output: {
+          file,
           format,
           exports: conf.outputExports,
           globals: (conf.umd as IUmd).globals,
           name: conf.umd && conf.umd.name,
-          file: join(cwd, name),
         },
       };
     default:
