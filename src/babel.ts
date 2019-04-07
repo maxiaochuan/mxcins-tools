@@ -1,5 +1,4 @@
 import * as babel from '@babel/core';
-import assert from 'assert';
 import * as chokidar from 'chokidar';
 import { existsSync, statSync } from 'fs';
 import gulp from 'gulp';
