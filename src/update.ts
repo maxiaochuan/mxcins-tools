@@ -22,8 +22,8 @@ export default function update(pkg: IPackage, conf: IFormattedBuildConf, opts: I
     if (conf.cjs) {
       if (conf.cjs.type === 'single') {
         infos.cjs = getExport('cjs', conf, opts);
-      } else if (conf.cjs.type === 'multiple') {
-        infos.cjs = getExport('cjs', conf, opts, 'lib');
+        // } else if (conf.cjs.type === 'multiple') {
+        //   infos.cjs = getExport('cjs', conf, opts, 'lib');
       }
     }
     if (conf.umd) {

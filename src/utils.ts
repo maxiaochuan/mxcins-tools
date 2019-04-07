@@ -20,14 +20,14 @@ export function getExport(
   type: BundleType,
   conf: IFormattedBuildConf,
   opts: IBuildOpts,
-  dir: string = 'dist',
+  output: string = 'dist',
 ) {
-  const entry = getEntry(conf, opts);
+  const entry = getEntry(conf, opts, output !== 'dist');
   const fname = basename(entry).replace(extname(entry), '');
-  if (dir === 'lib' || dir === 'es') {
-    return `${dir}/${(conf[type] && (conf[type] as any).name) || fname}.js`;
-  }
-  return `${dir}/${(conf[type] && (conf[type] as any).name) || fname}.${type}.js`;
+
+  return `${output}/${(conf[type] && (conf[type] as any).name) || fname}${
+    output === 'lib' || output === 'es' ? '' : `.${type}`
+  }.js`;
 }
 
 export function getPackageJson(cwd: string): IPackage {
