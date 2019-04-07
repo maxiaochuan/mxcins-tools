@@ -69,7 +69,7 @@ async function build(opts: IBuildOpts) {
     }
 
     if (opts.update) {
-      update(opts);
+      update(pkg, conf, opts);
     }
   } catch (error) {
     // tslint:disable-next-line:no-console

@@ -4,17 +4,13 @@ import { join } from 'path';
 import prettier from 'prettier';
 import sort from 'sort-package-json';
 import { TYPE_FILES } from './constants';
-import getUserConfig from './getUserConfig';
-import { IBuildOpts } from './types';
-import { getExistFilePath, getExport, getPackageJson, signale } from './utils';
+import { IBuildOpts, IFormattedBuildConf, IPackage } from './types';
+import { getExistFilePath, getExport, signale } from './utils';
 
-export default function update(opts: IBuildOpts) {
+export default function update(pkg: IPackage, conf: IFormattedBuildConf, opts: IBuildOpts) {
   try {
-    const pkg = getPackageJson(opts.cwd);
-    signale.init(pkg);
     signale.type = 'package.json';
 
-    const conf = getUserConfig(pkg, opts);
     const infos: { esm?: string; cjs?: string; umd?: string } = {};
     if (conf.esm) {
       if (conf.esm.type === 'single') {
