@@ -102,6 +102,16 @@ export default function getRollupConfig(
       );
       return {
         input,
+        onwarn(warning: any) {
+          // Suppress this error message... there are hundreds of them. Angular team says to ignore it.
+          // https://github.com/rollup/rollup/wiki/Troubleshooting#this-is-undefined
+          if (warning.code === 'THIS_IS_UNDEFINED') {
+            return;
+          }
+          // tslint:disable-next-line:no-console
+          console.error(warning.message);
+        },
+        context: 'window',
         external: [
           ...Object.keys(conf.pkg.peerDependencies || {}),
           /**
