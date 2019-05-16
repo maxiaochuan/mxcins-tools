@@ -111,6 +111,11 @@ export default function getRollupConfig(
           // tslint:disable-next-line:no-console
           console.error(warning.message);
         },
+        /**
+         * 2019-05-16 17:40:16
+         * 解决多次引用包的顶级作用域问题
+         * beta
+         */
         context: 'window',
         external: [
           ...Object.keys(conf.pkg.peerDependencies || {}),
