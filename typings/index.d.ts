@@ -1,3 +1,5 @@
+declare module 'rollup-plugin-node-globals';
+declare module 'rollup-plugin-node-builtins';
 declare module 'rollup-plugin-babel';
 declare module 'rollup-plugin-node-resolve';
 declare module 'rollup-plugin-commonjs';

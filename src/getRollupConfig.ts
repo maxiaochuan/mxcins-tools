@@ -3,6 +3,8 @@ import { extname, join } from 'path';
 import { IsExternal } from 'rollup';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
+import builtins from 'rollup-plugin-node-builtins';
+import globals from 'rollup-plugin-node-globals';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import postcss from 'rollup-plugin-postcss';
 import typescript from 'rollup-plugin-typescript2';
@@ -93,6 +95,8 @@ export default function getRollupConfig(
       return { input, external, plugins, output: { file, format, exports: conf.outputExports } };
     case 'umd':
       plugins.push(
+        globals(),
+        builtins(),
         nodeResolve({
           jsnext: true,
         }),
