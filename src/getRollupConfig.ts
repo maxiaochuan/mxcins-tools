@@ -15,17 +15,23 @@ import getBabelConfig from './getBabelConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf, IPackage, IUmd } from './types';
 import { getOutput } from './utils';
 
+/**
+ * 2019-06-04 17:48:23 fixed bug
+ * 当文件名包含 node_modules里面package的名字时，会被跳过 改用 RegExp
+ * @param pkg
+ * @param runtimeHelpers
+ */
 function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
   const names = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
-  ];
+  ].map(n => new RegExp(`^${n}$`));
 
   if (runtimeHelpers) {
-    names.push('@babel/runtime');
+    names.push(/^@babel\/runtime/);
   }
 
-  return id => names.some(name => id.includes(name));
+  return id => names.some(name => name.test(id));
 }
 
 export default function getRollupConfig(
