@@ -54,7 +54,7 @@ export default function getRollupConfig(
       runtimeHelpers,
     }),
     runtimeHelpers,
-    exclude: 'node_modules/**',
+    exclude: /\/node_modules\//,
     babelrc: false,
     extensions: ['.js', '.jsx', '.ts', '.tsx', '.es6', '.es', '.mjs'],
   };
