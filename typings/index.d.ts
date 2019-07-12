@@ -4,6 +4,7 @@ declare module 'rollup-plugin-babel';
 declare module 'rollup-plugin-node-resolve';
 declare module 'rollup-plugin-commonjs';
 declare module 'rollup-plugin-postcss';
+declare module 'rollup-plugin-alias';
 declare module 'autoprefixer';
 declare module 'resolve-bin';
 declare module '@babel/core';

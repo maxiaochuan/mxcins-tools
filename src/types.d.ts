@@ -52,6 +52,7 @@ export interface IConfig {
   runtimeHelpers?: boolean;
   browserFiles?: string[];
   outputExports?: 'default' | 'named' | 'none' | 'auto';
+  alias?: { [x: string]: string };
   types?: string | false;
 }
 

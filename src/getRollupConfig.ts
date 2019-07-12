@@ -1,10 +1,11 @@
 import autoprefixer from 'autoprefixer';
 import { extname, join } from 'path';
 import { IsExternal } from 'rollup';
+// import builtins from 'rollup-plugin-node-builtins';
+// import globals from 'rollup-plugin-node-globals';
+import alias from 'rollup-plugin-alias';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
-import builtins from 'rollup-plugin-node-builtins';
-import globals from 'rollup-plugin-node-globals';
 import nodeResolve from 'rollup-plugin-node-resolve';
 import postcss from 'rollup-plugin-postcss';
 import typescript from 'rollup-plugin-typescript2';
@@ -71,6 +72,10 @@ export default function getRollupConfig(
       use: ['less'],
       plugins: [autoprefixer()],
     }),
+    ...(conf.alias ? [alias(conf.alias)] : []),
+    nodeResolve({
+      mainFields: ['module', 'jsnext:main', 'main'],
+    }),
     ...(isTs
       ? [
           typescript({
@@ -101,14 +106,10 @@ export default function getRollupConfig(
       return { input, external, plugins, output: { file, format, exports: conf.outputExports } };
     case 'umd':
       plugins.push(
-        nodeResolve({
-          jsnext: true,
-        }),
         commonjs({
           include: /node_modules/,
+          // namedExports,
         }),
-        builtins(),
-        globals(),
       );
       return {
         input,
