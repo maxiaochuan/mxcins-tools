@@ -101,14 +101,14 @@ export default function getRollupConfig(
       return { input, external, plugins, output: { file, format, exports: conf.outputExports } };
     case 'umd':
       plugins.push(
-        globals(),
-        builtins(),
         nodeResolve({
           jsnext: true,
         }),
         commonjs({
           include: /node_modules/,
         }),
+        builtins(),
+        globals(),
       );
       return {
         input,
