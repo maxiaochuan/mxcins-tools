@@ -54,6 +54,11 @@ export interface IConfig {
   outputExports?: 'default' | 'named' | 'none' | 'auto';
   alias?: { [x: string]: string };
   types?: string | false;
+  dev?: {
+    esm?: IEsm | EsmType;
+    cjs?: ICjs | CjsType;
+    umd?: IUmd;
+  };
 }
 
 export interface IFormattedBuildConf extends IConfig {

@@ -47,6 +47,16 @@ export default (pkg: IPackage, opts: IBuildOpts): IFormattedBuildConf | false =>
     );
   }
 
+  if (opts.watch && conf.dev) {
+    return {
+      ...conf,
+      esm: typeof conf.dev.esm === 'string' ? { type: conf.dev.esm } : conf.dev.esm,
+      cjs: typeof conf.dev.cjs === 'string' ? { type: conf.dev.cjs } : conf.dev.cjs,
+      umd: conf.dev.umd,
+      pkg,
+    };
+  }
+
   return {
     ...conf,
     esm: typeof conf.esm === 'string' ? { type: conf.esm } : conf.esm,
