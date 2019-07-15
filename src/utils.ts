@@ -115,16 +115,15 @@ export function generateTsConfig(opts: IBuildOpts) {
   }
   copyFileSync(topTsConfigPath, join(cwd, 'tsconfig.json'));
 
-  if (opts.watch) {
-    process.on('SIGINT', () => {
-      signale.note('SIGINT: rm tsconfig.json');
-      rimraf.sync(join(cwd, 'tsconfig.json'));
-    });
-  } else {
-    process.on('exit', () => {
-      rimraf.sync(join(cwd, 'tsconfig.json'));
-    });
-  }
+  process.on('SIGINT', () => {
+    signale.note('SIGINT: rm tsconfig.json');
+    rimraf.sync(join(cwd, 'tsconfig.json'));
+    process.exit(0);
+  });
+  process.on('exit', () => {
+    signale.note('exit: rm tsconfig.json');
+    rimraf.sync(join(cwd, 'tsconfig.json'));
+  });
 
   return false;
 }
