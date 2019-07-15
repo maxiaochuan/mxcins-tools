@@ -1,8 +1,6 @@
 import autoprefixer from 'autoprefixer';
 import { extname, join } from 'path';
 import { IsExternal } from 'rollup';
-// import builtins from 'rollup-plugin-node-builtins';
-// import globals from 'rollup-plugin-node-globals';
 import alias from 'rollup-plugin-alias';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
