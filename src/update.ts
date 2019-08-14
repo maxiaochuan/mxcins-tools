@@ -41,13 +41,13 @@ export default function update(pkg: IPackage, conf: IFormattedBuildConf, opts: I
     }
 
     const { umd, cjs, esm } = infos;
-    // 2019-04-05 18:48:41 修改优先级 cjs > umd > pkg.main;
-    (pkg.main = cjs || umd || pkg.main || esm) && signale.info(`main: ${pkg.main}`);
-    (pkg['umd:main'] = umd) && signale.info(`umd:main: ${pkg['umd:main']}`);
-    (pkg.module = esm) && signale.info(`module: ${pkg.module}`);
-    // TODO: source
+    // 2019-08-14 10:00:00 修改优先级, 根据webpack的 mainFields https://webpack.js.org/configuration/resolve/#resolvemainfields
     (pkg['jsnext:main'] = esm) && signale.info(`jsnext:main: ${pkg['jsnext:main']}`);
-    (pkg.browser = umd) && signale.info(`browser: ${pkg.browser}`);
+    (pkg.browser = esm) && signale.info(`browser: ${pkg.browser}`);
+    (pkg.module = cjs || esm) && signale.info(`browser: ${pkg.module}`);
+    (pkg.main = cjs || esm || umd) && signale.info(`main: ${pkg.main}`);
+    (pkg['umd:main'] = umd) && signale.info(`umd:main: ${pkg['umd:main']}`);
+    // TODO: source
     // TODO: unpkg
     if (esm) {
       (pkg.sideEffects = true) && signale.info('side effects: true');
