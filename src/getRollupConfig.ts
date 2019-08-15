@@ -47,7 +47,10 @@ export default function getRollupConfig(
   // babel
   const babelConfig = {
     ...getBabelConfig({
-      target: 'browser',
+      /**
+       * 2019-08-15 15:25:20 fixed, cjs async await 打包 regeneratorRuntime is not defined
+       */
+      target: type === 'cjs' ? 'node' : 'browser',
       type,
       typescript: false,
       runtimeHelpers,
