@@ -2,9 +2,10 @@ import { extname } from 'path';
 import { rollup, watch } from 'rollup';
 import getRollupConfig from './getRollupConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf } from './types';
-import { generateTsConfig, getEntry, signale } from './utils';
+import { generateTsConfig, getEntry, ctr } from './utils';
 
 export default async function build(type: BundleType, conf: IFormattedBuildConf, opts: IBuildOpts) {
+  const { signale } = ctr;
   const entry = getEntry(conf, opts);
   const rollupConfig = getRollupConfig(type, entry, conf, opts);
   const isTs = ['.ts', '.tsx'].includes(extname(entry));

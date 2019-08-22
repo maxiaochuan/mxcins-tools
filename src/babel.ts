@@ -8,7 +8,7 @@ import slash from 'slash2';
 import through from 'through2';
 import getBabelConfig from './getBabelConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf } from './types';
-import { generateTsConfig, getEntry, signale } from './utils';
+import { generateTsConfig, getEntry, ctr } from './utils';
 
 function transform(
   type: BundleType,
@@ -20,7 +20,7 @@ function transform(
   const { browserFiles = [] } = conf;
 
   const isBrowser = browserFiles.includes(slash(f.path).replace(`${cwd}/`, ''));
-  signale.info(`[${isBrowser ? 'browser' : 'node'}] ${slash(f.path).replace(`${cwd}/`, '')}`);
+  ctr.signale.info(`[${isBrowser ? 'browser' : 'node'}] ${slash(f.path).replace(`${cwd}/`, '')}`);
 
   const babelConfig = getBabelConfig({
     target: isBrowser ? 'browser' : 'node',
@@ -65,7 +65,7 @@ export default async function build(type: BundleType, conf: IFormattedBuildConf,
   const targetDir = type === 'esm' ? 'es' : 'lib';
   const targetPath = join(cwd, targetDir);
 
-  signale.info(`Clear ${targetDir} directory`);
+  ctr.signale.info(`Clear ${targetDir} directory`);
   rimraf.sync(targetPath);
 
   const src = [
@@ -78,14 +78,14 @@ export default async function build(type: BundleType, conf: IFormattedBuildConf,
     createStream(src, srcPath, targetPath, type, conf, opts)
       .on('end', () => {
         if (watch) {
-          signale.info('Start watch', srcPath);
+          ctr.signale.info('Start watch', srcPath);
           chokidar
             .watch(srcPath, {
               ignoreInitial: true,
             })
             .on('all', (event, fullPath) => {
               // const relPath = fullPath.replace(srcPath, '');
-              signale.info(`[${event}] ${fullPath}`);
+              ctr.signale.info(`[${event}] ${fullPath}`);
               if (!existsSync(fullPath)) {
                 return;
               }

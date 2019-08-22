@@ -5,7 +5,7 @@ import rimraf from 'rimraf';
 
 import getUserConfig from './getUserConfig';
 import { IBuildOpts } from './types';
-import { getPackageJson, signale } from './utils';
+import { getPackageJson, ctr } from './utils';
 
 import babel from './babel';
 import gulp from './gulp';
@@ -21,22 +21,21 @@ async function build(opts: IBuildOpts) {
     /**
      * 初始化 signale
      */
-    signale.init(pkg);
     const conf = getUserConfig(pkg, opts);
 
+    ctr.signale = ctr.signale.scope(pkg.name);
+
     if (!conf) {
-      signale.warn('Config file does not exist, skip project!\n\n');
+      ctr.signale.warn('Config file does not exist, skip project!\n\n');
       return;
     }
 
     // 2019-04-05 18:14:16 fix bug 多种构建会被删除 所以移动到上层
-    signale.type = '';
-    signale.info(`Clear dist directory`);
-    const targetPath = join(opts.cwd, 'dist');
-    rimraf.sync(targetPath);
+    rimraf.sync(join(opts.cwd, 'dist'));
 
     if (conf.esm) {
-      signale.type = 'esm';
+      ctr.signale = ctr.signale.scope(pkg.name, 'esm');
+      const { signale } = ctr;
       signale.start('Building Start.');
       if (conf.esm.type === 'single') {
         await rollup('esm', conf, opts);
@@ -49,7 +48,8 @@ async function build(opts: IBuildOpts) {
     }
 
     if (conf.cjs) {
-      signale.type = 'cjs';
+      ctr.signale = ctr.signale.scope(pkg.name, 'cjs');
+      const { signale } = ctr;
       signale.start('Building Start.');
       if (conf.cjs.type === 'single') {
         await rollup('cjs', conf, opts);
@@ -60,8 +60,8 @@ async function build(opts: IBuildOpts) {
     }
 
     if (conf.umd) {
-      signale.type = 'umd';
-      signale.start('Building Start.');
+      ctr.signale = ctr.signale.scope(pkg.name, 'umd');
+      const { signale } = ctr;
       if (conf.umd.type === 'single') {
         await rollup('umd', conf, opts);
       }
@@ -73,7 +73,7 @@ async function build(opts: IBuildOpts) {
     }
   } catch (error) {
     // tslint:disable-next-line:no-console
-    signale.error(error);
+    ctr.signale.error(error);
   }
 }
 
@@ -82,6 +82,7 @@ async function buildForLerna(opts: IBuildOpts) {
   try {
     // const config = getUserConfig(opts);
     const pkgs = readdirSync(join(opts.cwd, 'packages'));
+    // eslint-disable-next-line no-restricted-syntax
     for (const pkg of pkgs) {
       const pkgPath = join(opts.cwd, 'packages', pkg);
       assert.ok(
@@ -89,6 +90,7 @@ async function buildForLerna(opts: IBuildOpts) {
         `package.json not found in packages/${pkg}`,
       );
       process.chdir(pkgPath);
+      // eslint-disable-next-line no-await-in-loop
       await build({
         ...opts,
         cwd: pkgPath,
@@ -96,8 +98,7 @@ async function buildForLerna(opts: IBuildOpts) {
       });
     }
   } catch (e) {
-    // tslint:disable-next-line:no-console
-    console.log(e);
+    ctr.signale.fatal(e);
     process.exit(1);
   }
 }

@@ -22,7 +22,7 @@ export function getRcPath(opts: IBuildOpts) {
     cache: false,
   });
 
-  const filePath = getExistPath({ cwd, files: CONFIG_FILES });
+  const filePath = getExistPath(cwd, CONFIG_FILES);
 
   return filePath;
 }
@@ -34,7 +34,7 @@ export default (pkg: IPackage, opts: IBuildOpts): IFormattedBuildConf | false =>
   if (!rcPath) {
     return false;
   }
-  const conf: IConfig = d(require(rcPath.abs));
+  const conf: IConfig = d(require(rcPath));
 
   /**
    * Runtime Helper Check

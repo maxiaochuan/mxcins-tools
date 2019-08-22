@@ -120,7 +120,7 @@ export default function getRollupConfig(
           if (warning.code === 'THIS_IS_UNDEFINED') {
             return;
           }
-          // tslint:disable-next-line:no-console
+          // eslint-disable-next-line no-console
           console.error(warning.message);
         },
         /**

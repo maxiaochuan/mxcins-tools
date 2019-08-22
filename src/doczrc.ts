@@ -14,7 +14,7 @@ export default {
     config.resolve.alias = {
       ...(config.resolve.alias || {}),
       // 解决react hooks 报错问题
-      react: require.resolve('react'),
+      'react': require.resolve('react'),
       'react-dom': require.resolve('react-dom'),
     };
 

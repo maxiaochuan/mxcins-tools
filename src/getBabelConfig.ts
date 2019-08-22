@@ -16,7 +16,7 @@ export default function getBabelConfig(opts: IGetBabelConfigOptions) {
   const { target, typescript, type, runtimeHelpers } = opts;
 
   const isBrowser = target === 'browser';
-  const targets = isBrowser ? { browsers: ['last 2 versions', 'IE 10'] } : { node: 6 };
+  const targets = isBrowser ? { browsers: ['last 2 versions', 'IE 10'] } : { node: 10 };
 
   return {
     presets: [
@@ -35,7 +35,12 @@ export default function getBabelConfig(opts: IGetBabelConfigOptions) {
       require.resolve('@babel/plugin-proposal-class-properties'),
       ...(runtimeHelpers
         ? // TODO: corejs2 待定;
-          [[require.resolve('@babel/plugin-transform-runtime'), { useESModules: true }]]
+          [
+            [
+              require.resolve('@babel/plugin-transform-runtime'),
+              { useESModules: isBrowser && type === 'esm' },
+            ],
+          ]
         : []),
     ],
   };

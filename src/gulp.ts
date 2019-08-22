@@ -7,7 +7,9 @@ import { join } from 'path';
 import rimraf from 'rimraf';
 import getBabelConfig from './getBabelConfig';
 import { BundleType, IBuildOpts, IFormattedBuildConf } from './types';
-import { generateTsConfig, getEntry, signale } from './utils';
+import { generateTsConfig, getEntry, ctr } from './utils';
+
+const { signale } = ctr;
 
 function getTsConfig(cwd: string) {
   const tsConfig = JSON.parse(readFileSync(join(cwd, 'tsconfig.json'), 'utf-8'));
