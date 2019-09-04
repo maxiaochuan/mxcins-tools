@@ -24,6 +24,7 @@ function generateExternal(pkg: IPackage, runtimeHelpers?: boolean): IsExternal {
   const names = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
+    ...Object.keys(pkg.devDependencies || {}),
   ].map(n => new RegExp(`^${n}$`));
 
   if (runtimeHelpers) {
@@ -75,7 +76,7 @@ export default function getRollupConfig(
     }),
     ...(conf.alias ? [alias(conf.alias)] : []),
     nodeResolve({
-      mainFields: ['module', 'jsnext:main', 'main'],
+      mainFields: ['module', 'main'],
     }),
     ...(isTs
       ? [

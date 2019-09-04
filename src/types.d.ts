@@ -12,6 +12,7 @@ type Dynamic = 'dynamic';
 export interface IPackage {
   dependencies?: { [x: string]: string };
   peerDependencies?: { [x: string]: string };
+  devDependencies?: { [x:string]: string };
   name: string;
   main?: string;
   ['umd:main']?: string;
