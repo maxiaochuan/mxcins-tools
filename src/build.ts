@@ -21,9 +21,10 @@ async function build(opts: IBuildOpts) {
     /**
      * 初始化 signale
      */
+    ctr.signale = ctr.signale.scope(pkg.name);
+
     const conf = getUserConfig(pkg, opts);
 
-    ctr.signale = ctr.signale.scope(pkg.name);
 
     if (!conf) {
       ctr.signale.warn('Config file does not exist, skip project!\n\n');
