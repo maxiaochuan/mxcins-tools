@@ -1,5 +1,9 @@
 const { eslint } = require("@mxcins/bedrock");
 
 module.exports = {
-  ...eslint
+  ...eslint,
+  rules: {
+    ...eslint.rules,
+    "global-require": 0
+  }
 };
