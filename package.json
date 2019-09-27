@@ -18,11 +18,12 @@
   ],
   "types": "src/types.d.ts",
   "bin": {
-    "mts": "./bin/mxcins-tools.js",
+    "mc": "./bin/mxcins-tools.js",
     "mxcins-tools": "./bin/mxcins-tools.js"
   },
   "scripts": {
     "build": "rm -rf lib && tsc",
+    "dev": "rm -rf lib && tsc --watch",
     "lint": "eslint --fix '**/*.{js,ts}' && yarn ts-compile-check",
     "lint-staged": "lint-staged",
     "prepublishOnly": "yarn build && np --no-cleanup --yolo --no-publish",
@@ -47,6 +48,10 @@
     "XiaochuanMa <mxcins@gmail.com> (https://github.com/maxiaochuan)"
   ],
   "dependencies": {
+    "@babel/core": "^7.6.2",
+    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-typescript": "^7.6.0",
+    "@babel/register": "^7.6.2",
     "ajv": "^6.10.2",
     "rollup": "^1.21.4",
     "signale": "^1.4.0",

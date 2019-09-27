@@ -1,12 +1,15 @@
+export interface IPackageJSON {
+  dependencies: Record<string, string>;
+}
 /**
  * single
  * multiple
  * components
  */
 export interface IConfig {
-  esm?: IESM | ESM;
-  cjs?: ICJS | CJS;
-  umd?: IUMD | UMD;
+  esm?: boolean | IESM | ESM;
+  cjs?: boolean | ICJS | CJS;
+  umd?: boolean | IUMD | UMD;
 
   runtimeHelpers?: boolean;
 

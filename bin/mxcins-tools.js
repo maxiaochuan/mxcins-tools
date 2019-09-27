@@ -29,5 +29,6 @@ switch (args._[0]) {
     break;
 
   default:
+    signale.error(`Unknown command ${args._}`);
     break;
 }
