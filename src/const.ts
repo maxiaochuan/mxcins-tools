@@ -10,3 +10,10 @@ export const CONFIG_FILES = [
 ];
 
 export const EXTENSIONS = ['.es6', '.es', '.js', '.jsx', '.mjs', '.ts', '.tsx'];
+
+export const DEFAULT_ROLLUP_ENTRY_FILES = [
+  'src/index.ts',
+  'src/index.tsx',
+  'src/index.js',
+  'src/index.jsx',
+];

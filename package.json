@@ -49,12 +49,22 @@
   ],
   "dependencies": {
     "@babel/core": "^7.6.2",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-decorators": "^7.6.0",
     "@babel/preset-env": "^7.6.2",
+    "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.6.0",
     "@babel/register": "^7.6.2",
     "ajv": "^6.10.2",
+    "babel-plugin-react-require": "^3.1.1",
     "rollup": "^1.21.4",
+    "rollup-plugin-alias": "^2.0.0",
+    "rollup-plugin-babel": "^4.3.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.24.3",
     "signale": "^1.4.0",
+    "temp-dir": "^2.0.0",
     "yargs-parser": "^14.0.0"
   },
   "devDependencies": {

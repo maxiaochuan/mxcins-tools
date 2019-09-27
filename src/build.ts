@@ -3,21 +3,28 @@ import signale from 'signale';
 import { getUserConfig } from './getUserConfig';
 import { IPackageJSON } from './types';
 
-interface IBundleOpts {
+import rollup from './rollup';
+
+interface IBuildOpts {
   cwd: string;
   watch: boolean;
   update: boolean;
 }
 
-export default async (opts: IBundleOpts) => {
+export default async (opts: IBuildOpts) => {
+  const { cwd, watch } = opts;
+  const pkg: IPackageJSON = require(join(cwd, 'package'));
   try {
-    const { cwd } = opts;
-    // eslint-disable-next-line import/no-dynamic-require
-    const pkg: IPackageJSON = require(join(cwd, 'package'));
+    /**
+     * get config
+     */
     const conf = getUserConfig(opts.cwd, pkg);
 
-    signale.info(conf);
+    if (conf.esm) {
+      await rollup({ cwd, type: 'esm', conf, pkg, watch });
+    }
   } catch (error) {
-    signale.scope(error.scope).error(error.message);
+    console.error(error);
+    signale.scope(error.scope || 'Build').error(error.message);
   }
 };

@@ -1,30 +1,18 @@
 // const Ajv = require('ajv');
 import Ajv from 'ajv';
-import assert from 'assert';
-import signale from 'signale';
 import { join } from 'path';
 import { EXTENSIONS, CONFIG_FILES } from './const';
-import { getExistPath } from './utils';
-import { IConfig, IPackageJSON } from './types';
+import { getExistPath, ConfigError } from './utils';
+import { IConfig, IPackageJSON, IRequiredConfig } from './types';
 import schema from './schema';
-
-class ConfigError extends Error {
-  public scope = '';
-
-  constructor(scope: string, msg: string) {
-    super(msg);
-    this.scope = scope;
-  }
-}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const d = <T>(o: any): T => o.default || o;
 
-export const getUserConfig = (cwd: string, pkg: IPackageJSON) => {
+export const getUserConfig = (cwd: string, pkg: IPackageJSON): IRequiredConfig => {
   const path = getExistPath(cwd, CONFIG_FILES);
   if (!path) {
-    signale.warn('Config file is not exist, skip project!\n\n');
-    return;
+    throw new ConfigError('UserConfig', 'Config file is not exist, skip project!\n\n');
   }
   require('@babel/register')({
     presets: [
@@ -43,25 +31,43 @@ export const getUserConfig = (cwd: string, pkg: IPackageJSON) => {
    */
   const ajv = new Ajv({ allErrors: true });
   if (!ajv.validate(schema, conf)) {
-    const error = new ConfigError(
+    throw new ConfigError(
       'UserConfig',
       (ajv.errors &&
         ajv.errors.map((e, i) => `${i + 1}. ${Object.values(e.params)} ${e.message}`).join('\n')) ||
         '',
     );
-    throw error;
   }
 
   /**
    * runtime check
    */
-  if (conf.runtimeHelpers) {
-    const dependencies = pkg.dependencies || {};
-    assert.ok(
-      dependencies['@babel/runtime'],
+  if (conf.runtimeHelpers && !(pkg.dependencies || {})['@babel/runtime']) {
+    throw new ConfigError(
+      'UserConfig',
       '@babel/runtime dependency is required to use runtimeHelpers',
     );
   }
 
-  return conf;
+  return {
+    ...conf,
+    esm:
+      typeof conf.esm === 'boolean'
+        ? { type: 'single' }
+        : typeof conf.esm === 'string'
+        ? { type: conf.esm }
+        : conf.esm,
+    cjs:
+      typeof conf.cjs === 'boolean'
+        ? { type: 'single' }
+        : typeof conf.cjs === 'string'
+        ? { type: conf.cjs }
+        : conf.cjs,
+    umd:
+      typeof conf.umd === 'boolean'
+        ? { type: 'single' }
+        : typeof conf.umd === 'string'
+        ? { type: conf.umd }
+        : conf.umd,
+  };
 };
