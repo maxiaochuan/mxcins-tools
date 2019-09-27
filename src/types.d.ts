@@ -12,7 +12,7 @@ export interface IConfig {
 
   // for rollup
   entry?: string;
-  exports: "default" | "named" | "none" | "auto";
+  exports: 'default' | 'named' | 'none' | 'auto';
 }
 
 interface IESM {
@@ -27,6 +27,6 @@ interface IUMD {
 type ESM = S | M | C;
 type CJS = S | M;
 type UMD = S;
-type S = "single";
-type M = "multiple";
-type C = "components";
+type S = 'single';
+type M = 'multiple';
+type C = 'components';
