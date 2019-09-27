@@ -1,0 +1,59 @@
+{
+  "name": "@mxcins/tools",
+  "version": "4.0.0-alpha.0",
+  "description": "tools",
+  "homepage": "https://github.com/maxiaochuan/mxcins-tools",
+  "bugs": {
+    "url": "https://github.com/maxiaochuan/mxcins-tools/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maxiaochuan/mxcins-tools"
+  },
+  "license": "MIT",
+  "files": [
+    "lib",
+    "bin",
+    "src/types.d.ts"
+  ],
+  "types": "src/types.d.ts",
+  "bin": {
+    "mts": "./bin/mxcins-tools.js",
+    "mxcins-tools": "./bin/mxcins-tools.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint --fix '**/*.{js,ts}' && yarn ts-compile-check",
+    "lint-staged": "lint-staged",
+    "prepublishOnly": "yarn build && np --no-cleanup --yolo --no-publish",
+    "prettier": "prettier --write \"{,!(node_modules)/**/}*.{js,ts}\""
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "authors": [
+    "XiaochuanMa <mxcins@gmail.com> (https://github.com/maxiaochuan)"
+  ],
+  "dependencies": {
+    "signale": "^1.4.0",
+    "yargs-parser": "^14.0.0"
+  },
+  "devDependencies": {
+    "@mxcins/bedrock": "^1.0.0-beta.4",
+    "husky": "^3.0.5",
+    "lint-staged": "^9.4.0",
+    "typescript": "^3.6.3"
+  }
+}
