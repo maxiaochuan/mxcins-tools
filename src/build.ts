@@ -1,5 +1,6 @@
 import { join } from 'path';
 import signale from 'signale';
+import rimraf from 'rimraf';
 import assert from 'assert';
 import { readdirSync, existsSync } from 'fs';
 import { getUserConfig } from './getUserConfig';
@@ -21,8 +22,10 @@ const build = async (opts: IBuildOpts) => {
     /**
      * get config
      */
-    const conf = getUserConfig(opts.cwd, pkg, watch);
+    const conf = getUserConfig(cwd, pkg, watch);
     generateTsConfig(cwd);
+    rimraf.sync(join(cwd, 'dist'));
+
 
     if (conf.esm) {
       if (conf.esm.type === 'single') {

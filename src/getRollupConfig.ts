@@ -70,7 +70,7 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
         ]
       : []),
     nodeResolve({
-      mainFields: ['module', 'main'],
+      mainFields: ['jsnext:main', 'browser', 'module', 'main'],
     }),
     ...(isTs
       ? [
