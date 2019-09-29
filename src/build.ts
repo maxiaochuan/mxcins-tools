@@ -13,7 +13,7 @@ interface IBuildOpts {
 }
 
 /**
- * 
+ *
  */
 export default async (opts: IBuildOpts) => {
   const { cwd, watch } = opts;
@@ -34,7 +34,7 @@ export default async (opts: IBuildOpts) => {
     }
   } catch (error) {
     if (error.scope) {
-      signale.scope(...error.scope || 'Build').error(error.message);
+      signale.scope(...(error.scope || 'Build')).error(error.message);
     } else {
       console.log('e', error);
       process.exit(1);

@@ -3,9 +3,9 @@ import { extname, join } from 'path';
 import rimraf from 'rimraf';
 import through from 'through2';
 import signale from 'signale';
-import gulp from 'gulp';
-import watch from 'gulp-watch';
+import gulp, { watch } from 'gulp';
 import typescript from 'gulp-typescript';
+import { existsSync } from 'fs';
 import { BundleType, IRequiredConfig, IPackageJSON } from './types';
 import { getEntryPath, ConfigError } from './utils';
 import { DEFAULT_GULP_ENTRY_DIRS } from './const';
@@ -19,172 +19,105 @@ interface IGulpOpts {
   pkg: IPackageJSON;
 }
 
-const tsTransform = typescript.createProject('tsconfig.json', {
-    target: 'es6',
-    jsx: 'preserve',
-    declaration: true,
-    allowSyntheticDefaultImports: true,
-});
-
-const babelTransform = (f: any, type: BundleType, conf: IRequiredConfig, target?: 'browser' | 'node') => {
-  const babelConfig = getBabelConfig({
-    target: target || conf.target || 'node',
-    type,
-    typescript: true,
-    runtimeHelpers: conf.runtimeHelpers,
+const jsTransform = (type: BundleType, conf: IRequiredConfig, target?: 'browser' | 'node') =>
+  through.obj((f, _, cb) => {
+    f.contents = Buffer.from(
+      babel.transform(f.contents, {
+        ...getBabelConfig({
+          target: target || conf.target || 'node',
+          type,
+          typescript: false,
+          runtimeHelpers: conf.runtimeHelpers,
+        }),
+        filename: f.path,
+      }).code,
+    );
+    f.path = f.path.replace(extname(f.path), '.js');
+    cb(null, f);
   });
-
-  return babel.transform(f.contents, {
-    ...babelConfig,
-    filename: f.path,
-  }).code;
-};
-
-const forCJS = (
-  source: string[],
-  targetDir: string,
-  type: BundleType,
-  conf: IRequiredConfig,
-) => buildJs(source, targetDir, type, conf);
-
-// const bundleWithoutDeclaration = async () => {
-//   gulp
-//     .src(source, { base, allowEmpty: true })
-//     .pipe(
-//       through.obj((file, _, cb) => {
-//         file.contents = Buffer.from(babelTransform(type, file, conf, target));
-//         file.path = file.path.replace(extname(file.path), '.js');
-//         cb(null, file);
-//       }),
-//     )
-//     .pipe(gulp.dest(targetPath))
-//     .on('end', resolve)
-//     .on('error', reject)
-// }
-
-async function buildJss (
-  source: string[],
-  targetDir: string,
-  type: BundleType,
-  conf: IRequiredConfig,
-  target?: 'browser' | 'node',
-) {
-  gulp
-    .src(source, { allowEmpty: true })
-    .pipe(
-      through.obj((file, _, cb) => {
-        file.contents = Buffer.from(babelTransform(type, file, conf, target));
-        file.path = file.path.replace(extname(file.path), '.js');
-        cb(null, file);
-      }),
-    )
-    .pipe(gulp.dest(targetPath))
-    .on('end', resolve)
-    .on('error', reject)
-}
 
 async function transform(
   source: string[],
   targetDir: string,
   type: BundleType,
   conf: IRequiredConfig,
+  isTs: boolean,
   target?: 'browser' | 'node',
 ) {
-
   const ts = async () => {
-    const tsResult = gulp
-      .src(source.filter(s => s.includes('.ts')))
-      .pipe(tsTransform())
-    
-    tsResult.js
-    .pipe(
-      through.obj((file, _, cb) => {
-        file.contents = Buffer.from(babelTransform(type, file, conf, target));
-        file.path = file.path.replace(extname(file.path), '.js');
-        cb(null, file);
+    const tsTransform = typescript.createProject('tsconfig.json', {
+      target: 'esnext',
+      jsx: 'preserve',
+      declaration: true,
+      allowSyntheticDefaultImports: true,
+    });
+
+    const tsResult = gulp.src(source.filter(s => s.includes('.ts'))).pipe(tsTransform());
+
+    return Promise.all([
+      new Promise((resolve, reject) => {
+        tsResult.js
+          .pipe(jsTransform(type, conf, target))
+          .pipe(gulp.dest(targetDir))
+          .on('finish', resolve)
+          .on('error', reject);
       }),
-    )
-    .pipe(gulp.dest(targetDir))
-    // await new Promise((resolve, reject) => {
-    //   const tsResult = gulp
-    //     .src(source.filter(s => s.includes('.ts')))
-    //     .pipe(tsTransform())
-    //     .on('error', e => reject(e))
-    //     .on('finish', () => resolve(tsResult));
-    // });
-
-  }
-  const js = () => {
-
-  }
-
-  const js = (s: any) =>
+      new Promise((resolve, reject) => {
+        tsResult.dts
+          .pipe(gulp.dest(targetDir))
+          .on('finish', resolve)
+          .on('error', reject);
+      }),
+    ]);
+  };
+  const js = async () =>
     new Promise((resolve, reject) => {
-      s.js
-        .pipe(
-          through.obj((file, _, cb) => {
-            file.contents = Buffer.from(babelTransform(type, file, conf));
-            file.path = file.path.replace(extname(file.path), '.js');
-            cb(null, file);
-          }),
-        )
+      gulp
+        .src(source.filter(s => s.includes('.js')))
+        .pipe(jsTransform(type, conf, target))
         .pipe(gulp.dest(targetDir))
-        .on('error', (e: Error) => reject(e))
-        .on('finish', () => resolve());
+        .on('finish', resolve)
+        .on('error', reject);
     });
 
-  const dts = (s: any) =>
-    new Promise((resolve, reject) => {
-      s.dts
-        .pipe(gulp.dest(targetDir))
-        .on('error', (e: Error) => reject(e))
-        .on('finish', () => resolve());
-    });
-
-  const stream = await main();
-  await dts(stream);
-  await js(stream);
+  if (isTs) {
+    await ts();
+  }
+  await js();
 }
 
-async function buildLess(srcDir: string, targetDir: string) {
+async function buildLess(source: string[], targetDir: string) {
   return new Promise((resolve, reject) => {
     gulp
-      .src(`${srcDir}/**/*.less`)
+      .src(source.filter(s => s.includes('less')))
       .pipe(gulp.dest(targetDir))
       .on('finish', resolve)
       .on('error', reject);
   });
 }
 
-async function copyAssets(srcDir: string, targetDir: string) {
+async function copyAssets(source: string[], targetDir: string) {
   return new Promise((resolve, reject) => {
     gulp
-      .src([`${srcDir}/**/*.@(png|svg)`])
+      .src(source.filter(s => s.includes('png')))
       .pipe(gulp.dest(targetDir))
       .on('finish', resolve)
       .on('error', reject);
   });
 }
 
-const forESM = async (
-  src: string[],
-  srcDir: string,
-  targetDir: string,
-  type: BundleType,
-  conf: IRequiredConfig,
-  ) => {
-  await buildTs(src, targetDir, type, conf);
-  await buildLess(srcDir, targetDir);
-  await copyAssets(srcDir, targetDir);
+const forESM = async (src: string[], targetDir: string, conf: IRequiredConfig, isTs: boolean) => {
+  await transform(src, targetDir, 'esm', conf, isTs);
+  await buildLess(src, targetDir);
+  await copyAssets(src, targetDir);
 };
+
+const forCJS = (source: string[], targetDir: string, conf: IRequiredConfig, isTs: boolean) =>
+  transform(source, targetDir, 'cjs', conf, isTs, 'node');
 
 const run = async (opts: IGulpOpts) => {
   const { cwd, type, pkg, conf } = opts;
-  const scope = [
-    pkg.name || '',
-    (conf[type] as any).type.toUpperCase(),
-    type.toUpperCase(),
-  ]
+  const scope = [pkg.name || '', (conf[type] as any).type.toUpperCase(), type.toUpperCase()];
   const print = signale.scope(...scope);
   const srcDir = conf.entry || getEntryPath(cwd, DEFAULT_GULP_ENTRY_DIRS);
   if (!srcDir) {
@@ -193,30 +126,40 @@ const run = async (opts: IGulpOpts) => {
 
   const targetDir = join(cwd, type === 'esm' ? 'es' : 'lib');
   rimraf.sync(targetDir);
-  print.info(`Clear ${targetDir.replace(cwd, '')} directory.`);
+  print.info(`clear ${targetDir.replace(cwd, '')} directory.`);
 
   const source = [
     `${srcDir}/**/*.tsx`,
     `${srcDir}/**/*.ts`,
+    `${srcDir}/**/*.jsx`,
+    `${srcDir}/**/*.js`,
     'typings/**/*.d.ts',
+    `${srcDir}/**/*.@(png|svg)`,
+    `${srcDir}/**/*.less`,
     `!${srcDir}/**/*.test.{js,ts}`,
     `!${srcDir}/**/*.e2e.{js,ts}`,
   ];
 
-  if (type === 'cjs') {
-    return forCJS(source, targetDir, type, conf).then(() => {
-      if (opts.watch) {
-        watch(source, forCJS);
-      }
-    })
-  }
+  const isTs = existsSync(join(opts.cwd, 'tsconfig.json'));
 
-  if (type === 'esm') {
-    return forESM(source, srcDir, targetDir, type, conf).then(() => {
-      if (opts.watch) {
-        watch(source, forESM);
-      }
-    })
+  try {
+    if (type === 'cjs') {
+      print.start(`gulp <- ${srcDir.replace(`${opts.cwd}/`, '')}`);
+      await forCJS(source, targetDir, conf, isTs).then(() => {
+        if (opts.watch) {
+          watch(source, () => forCJS(source, targetDir, conf, isTs));
+        }
+      });
+    }
+    if (type === 'esm') {
+      await forESM(source, targetDir, conf, isTs).then(() => {
+        if (opts.watch) {
+          watch(source, () => forESM(source, targetDir, conf, isTs));
+        }
+      });
+    }
+  } catch (error) {
+    throw error;
   }
 };
 
