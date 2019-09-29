@@ -68,6 +68,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript2": "^0.24.3",
     "signale": "^1.4.0",
+    "sort-package-json": "^1.22.1",
     "temp-dir": "^2.0.0",
     "through2": "^3.0.1",
     "yargs-parser": "^14.0.0"
@@ -76,6 +77,7 @@
     "@mxcins/bedrock": "^1.0.0-beta.4",
     "@types/gulp": "^4.0.6",
     "@types/node": "^12.7.8",
+    "@types/prettier": "^1.18.2",
     "@types/rollup": "^0.54.0",
     "@types/signale": "^1.2.1",
     "@types/through2": "^2.0.34",

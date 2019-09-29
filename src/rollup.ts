@@ -16,7 +16,7 @@ interface IRollupOpts {
 
 const run = async (opts: IRollupOpts) => {
   const { cwd, type, pkg, conf } = opts;
-  const scope = [pkg.name || '', (conf[type] as any).type.toUpperCase(), type.toUpperCase()];
+  const scope = [pkg.name || '', type.toUpperCase(), (conf[type] as any).type.toUpperCase()];
   const print = signale.scope(...scope);
 
   const entry = conf.entry || getEntryPath(cwd, DEFAULT_ROLLUP_ENTRY_FILES);
@@ -51,6 +51,8 @@ const run = async (opts: IRollupOpts) => {
       print.complete(`rollup -> ${f}`);
     }
   }
+
+  return ((rollupConfig.output && rollupConfig.output.file) || '').replace(`${opts.cwd}/`, '');
 };
 
 export default run;

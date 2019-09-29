@@ -6,7 +6,7 @@ import nodeResolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import alias from 'rollup-plugin-alias';
 import tempDir from 'temp-dir';
-import { BundleType, IPackageJSON, IRequiredConfig } from './types';
+import { BundleType, IPackageJSON, IRequiredConfig, IUMD } from './types';
 import { getBabelConfig } from './getBabelConfig';
 import { EXTENSIONS } from './const';
 
@@ -88,7 +88,7 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
     babel(babelConfig),
   ];
 
-  const name = basename(entry, extname(entry));
+  const name = (conf[type] as any).name || basename(entry, extname(entry));
 
   switch (type) {
     case 'esm':
@@ -107,7 +107,7 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
         external,
         plugins,
         output: {
-          file: join(cwd, 'dist', `${(cjs && cjs.file) || `${name}.esm`}.js`),
+          file: join(cwd, 'dist', `${(cjs && cjs.file) || `${name}.cjs`}.js`),
           format,
         },
       };
@@ -144,6 +144,13 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
            */
           ...Object.keys((umd && umd.globals) || {}),
         ],
+        output: {
+          file: join(cwd, 'dist', `${(cjs && cjs.file) || `${name}.umd`}.js`),
+          format,
+          // exports: conf.outputExports,
+          globals: (conf.umd as IUMD).globals,
+          name: conf.umd && conf.umd.name,
+        },
       };
     default:
       throw new Error(`rollup unsupported type ${type}`);

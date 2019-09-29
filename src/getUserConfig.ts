@@ -63,11 +63,6 @@ export const getUserConfig = (cwd: string, pkg: IPackageJSON): IRequiredConfig =
         : typeof conf.cjs === 'string'
         ? { type: conf.cjs }
         : conf.cjs,
-    umd:
-      typeof conf.umd === 'boolean'
-        ? { type: 'single' }
-        : typeof conf.umd === 'string'
-        ? { type: conf.umd }
-        : conf.umd,
+    umd: { type: 'single', ...conf.umd },
   };
 };

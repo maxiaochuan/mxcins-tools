@@ -117,7 +117,7 @@ const forCJS = (source: string[], targetDir: string, conf: IRequiredConfig, isTs
 
 const run = async (opts: IGulpOpts) => {
   const { cwd, type, pkg, conf } = opts;
-  const scope = [pkg.name || '', (conf[type] as any).type.toUpperCase(), type.toUpperCase()];
+  const scope = [pkg.name || '', type.toUpperCase(), (conf[type] as any).type.toUpperCase()];
   const print = signale.scope(...scope);
   const srcDir = conf.entry || getEntryPath(cwd, DEFAULT_GULP_ENTRY_DIRS);
   if (!srcDir) {
@@ -158,6 +158,11 @@ const run = async (opts: IGulpOpts) => {
         }
       });
     }
+
+    const dist = `${targetDir}/index.js`.replace(`${opts.cwd}/`, '');
+    print.complete(`gulp -> ${dist}`);
+
+    return dist;
   } catch (error) {
     throw error;
   }

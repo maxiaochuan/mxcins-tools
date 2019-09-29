@@ -19,3 +19,5 @@ export const DEFAULT_ROLLUP_ENTRY_FILES = [
 ];
 
 export const DEFAULT_GULP_ENTRY_DIRS = ['src'];
+
+export const TYPE_FILES = [`es/index.d.ts`, 'src/types.d.ts'];

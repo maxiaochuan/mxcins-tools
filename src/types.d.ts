@@ -1,8 +1,29 @@
+export interface IBuildOpts {
+  cwd: string;
+  watch: boolean;
+  package: boolean;
+}
+
+export interface IOutput {
+  esm?: string;
+  cjs?: string;
+  umd?: string;
+}
+
 export interface IPackageJSON {
   name?: string;
   dependencies?: Record<string, string>;
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
+  main?: string;
+  ['umd:main']?: string;
+  unpkg: string;
+  module?: string;
+  source?: string;
+  ['jsnext:main']?: string;
+  browser?: string;
+  sideEffects?: boolean;
+  types?: string;
 }
 /**
  * single
@@ -12,7 +33,7 @@ export interface IPackageJSON {
 export interface IConfig {
   esm?: boolean | ESM | IESM;
   cjs?: boolean | CJS | ICJS;
-  umd?: boolean | UMD | IUMD;
+  umd?: IUMD;
 
   runtimeHelpers?: boolean;
 
@@ -39,7 +60,7 @@ interface ICJS {
   file?: string;
 }
 interface IUMD {
-  type: UMD;
+  type?: UMD;
   name?: string;
   file?: string;
   globals?: Record<string, string>;
