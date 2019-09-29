@@ -48,7 +48,7 @@ const run = async (opts: IRollupOpts) => {
     if (output) {
       await bundle.write(output);
       const f = (output.file as string).replace(`${opts.cwd}/`, '');
-      print.complete(`rollup -> ${f}`);
+      print.complete(`rollup -> ${f}\n\n`);
     }
   }
 

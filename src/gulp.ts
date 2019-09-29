@@ -160,7 +160,7 @@ const run = async (opts: IGulpOpts) => {
     }
 
     const dist = `${targetDir}/index.js`.replace(`${opts.cwd}/`, '');
-    print.complete(`gulp -> ${dist}`);
+    print.complete(`gulp -> ${dist}\n\n`);
 
     return dist;
   } catch (error) {

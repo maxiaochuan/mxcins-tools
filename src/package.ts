@@ -48,7 +48,7 @@ export default function updatePackageJSON(output: IOutput, pkg: IPackageJSON, op
       prettier.format(JSON.stringify(sort(copy)), { parser: 'json', printWidth: 1 }),
       { encoding: 'utf8' },
     );
-    print.success('Update package.json complete.\n\n');
+    print.complete('Update package.json complete.\n\n');
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(error);

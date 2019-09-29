@@ -1,5 +1,7 @@
 import { join } from 'path';
 import signale from 'signale';
+import assert from 'assert';
+import { readdirSync, existsSync } from 'fs';
 import { getUserConfig } from './getUserConfig';
 import { IPackageJSON, IBuildOpts, IOutput } from './types';
 
@@ -10,7 +12,7 @@ import updatePackageJSON from './package';
 /**
  *
  */
-export default async (opts: IBuildOpts) => {
+const build = async (opts: IBuildOpts) => {
   const { cwd, watch } = opts;
   const output: IOutput = {};
   const pkg: IPackageJSON = require(join(cwd, 'package'));
@@ -55,3 +57,38 @@ export default async (opts: IBuildOpts) => {
     }
   }
 };
+
+async function buildForLerna(opts: IBuildOpts) {
+  // const { cwd } = opts;
+  try {
+    const pkgs = readdirSync(join(opts.cwd, 'packages'));
+    // eslint-disable-next-line no-restricted-syntax
+    for (const pkg of pkgs) {
+      const pkgPath = join(opts.cwd, 'packages', pkg);
+      assert.ok(
+        existsSync(join(pkgPath, 'package.json')),
+        `package.json not found in packages/${pkg}`,
+      );
+      process.chdir(pkgPath);
+      // eslint-disable-next-line no-await-in-loop
+      await build({
+        ...opts,
+        cwd: pkgPath,
+        // root: cwd,
+      });
+    }
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e);
+    process.exit(1);
+  }
+}
+
+export default async function(opts: IBuildOpts) {
+  const useLerna = existsSync(join(opts.cwd, 'lerna.json'));
+  if (useLerna) {
+    await buildForLerna(opts);
+  } else {
+    await build(opts);
+  }
+}
