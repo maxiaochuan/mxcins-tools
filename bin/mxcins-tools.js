@@ -4,7 +4,7 @@ const args = require('yargs-parser')(process.argv.slice(2), {
   alias: {
     version: ['v'],
     watch: ['w'],
-    update: ['u'],
+    package: ['p'],
   },
 });
 
@@ -17,14 +17,14 @@ if (args.version) {
 }
 
 const cwd = process.cwd();
-const { watch, update } = args;
+const { watch, package } = args;
 
 switch (args._[0]) {
   case 'build':
     require('../lib/build').default({
       cwd,
       watch,
-      update,
+      package,
     });
     break;
 

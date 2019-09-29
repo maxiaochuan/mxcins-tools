@@ -12,7 +12,7 @@ const d = <T>(o: any): T => o.default || o;
 export const getUserConfig = (cwd: string, pkg: IPackageJSON): IRequiredConfig => {
   const path = getExistPath(cwd, CONFIG_FILES);
   if (!path) {
-    throw new ConfigError('UserConfig', 'Config file is not exist, skip project!\n\n');
+    throw new ConfigError('Config file is not exist, skip project!\n\n', [pkg.name, 'UserConfig']);
   }
   require('@babel/register')({
     presets: [
@@ -32,10 +32,10 @@ export const getUserConfig = (cwd: string, pkg: IPackageJSON): IRequiredConfig =
   const ajv = new Ajv({ allErrors: true });
   if (!ajv.validate(schema, conf)) {
     throw new ConfigError(
-      'UserConfig',
       (ajv.errors &&
         ajv.errors.map((e, i) => `${i + 1}. ${Object.values(e.params)} ${e.message}`).join('\n')) ||
         '',
+      [pkg.name, 'UserConfig'],
     );
   }
 
@@ -43,10 +43,10 @@ export const getUserConfig = (cwd: string, pkg: IPackageJSON): IRequiredConfig =
    * runtime check
    */
   if (conf.runtimeHelpers && !(pkg.dependencies || {})['@babel/runtime']) {
-    throw new ConfigError(
+    throw new ConfigError('@babel/runtime dependency is required to use runtimeHelpers', [
+      pkg.name,
       'UserConfig',
-      '@babel/runtime dependency is required to use runtimeHelpers',
-    );
+    ]);
   }
 
   return {

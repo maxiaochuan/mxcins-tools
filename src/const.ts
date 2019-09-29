@@ -17,3 +17,5 @@ export const DEFAULT_ROLLUP_ENTRY_FILES = [
   'src/index.js',
   'src/index.jsx',
 ];
+
+export const DEFAULT_GULP_ENTRY_DIRS = ['src'];

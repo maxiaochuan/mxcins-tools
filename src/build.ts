@@ -4,13 +4,17 @@ import { getUserConfig } from './getUserConfig';
 import { IPackageJSON } from './types';
 
 import rollup from './rollup';
+import gulp from './gulp';
 
 interface IBuildOpts {
   cwd: string;
   watch: boolean;
-  update: boolean;
+  package: boolean;
 }
 
+/**
+ * 
+ */
 export default async (opts: IBuildOpts) => {
   const { cwd, watch } = opts;
   const pkg: IPackageJSON = require(join(cwd, 'package'));
@@ -21,10 +25,19 @@ export default async (opts: IBuildOpts) => {
     const conf = getUserConfig(opts.cwd, pkg);
 
     if (conf.esm) {
-      await rollup({ cwd, type: 'esm', conf, pkg, watch });
+      if (conf.esm.type === 'single') {
+        await rollup({ cwd, type: 'esm', conf, pkg, watch });
+      }
+      if (conf.esm.type === 'multiple') {
+        await gulp({ cwd, type: 'esm', conf, pkg, watch });
+      }
     }
   } catch (error) {
-    console.error(error);
-    signale.scope(error.scope || 'Build').error(error.message);
+    if (error.scope) {
+      signale.scope(...error.scope || 'Build').error(error.message);
+    } else {
+      console.log('e', error);
+      process.exit(1);
+    }
   }
 };

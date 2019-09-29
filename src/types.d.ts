@@ -1,7 +1,8 @@
 export interface IPackageJSON {
-  dependencies: Record<string, string>;
-  devDependencies: Record<string, string>;
-  peerDependencies: Record<string, string>;
+  name?: string;
+  dependencies?: Record<string, string>;
+  devDependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
 }
 /**
  * single
@@ -43,9 +44,9 @@ interface IUMD {
   file?: string;
   globals?: Record<string, string>;
 }
-type ESM = S | M | C;
+
+type ESM = S | M;
 type CJS = S | M;
 type UMD = S;
 type S = 'single';
 type M = 'multiple';
-type C = 'components';
