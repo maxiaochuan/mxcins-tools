@@ -77,11 +77,11 @@ async function buildForLerna(opts: IBuildOpts) {
           createWriteStream(join(pkgPath, 'tsconfig.json')),
         );
         // eslint-disable-next-line no-loop-func
-        process.on('SIGINT', () => {
-          signale.scope('EXIT').note('exit: rm tsconfig.json');
-          rimraf.sync(join(pkgPath, 'tsconfig.json'));
-          process.exit(0);
-        });
+        // process.on('SIGINT', () => {
+        //   signale.scope('EXIT').note('exit: rm tsconfig.json');
+        //   rimraf.sync(join(pkgPath, 'tsconfig.json'));
+        //   process.exit(0);
+        // });
         process.on('exit', () => {
           signale.scope('EXIT').note('exit: rm tsconfig.json');
           rimraf.sync(join(pkgPath, 'tsconfig.json'));

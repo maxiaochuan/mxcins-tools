@@ -1,4 +1,5 @@
 import { join, basename, extname } from 'path';
+import Debug from 'debug';
 import { RollupOptions, IsExternal } from 'rollup';
 import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript2';
@@ -18,6 +19,8 @@ interface IGetRollupConfigOpts {
   pkg: IPackageJSON;
   conf: IRequiredConfig;
 }
+
+const debug = Debug('mxcins-tools:rollup:config');
 
 const gExternal = (pkg: IPackageJSON, rh?: boolean): IsExternal => {
   const names = [
@@ -54,6 +57,8 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
   const input = join(cwd, entry);
   const external = gExternal(pkg, runtimeHelpers);
   const format = type;
+
+  debug('typescript: %s', isTs);
 
   const plugins = [
     ...(confAlias
