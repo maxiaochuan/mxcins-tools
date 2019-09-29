@@ -27,7 +27,13 @@ switch (args._[0]) {
       package,
     });
     break;
-
+  case 'dev':
+    require('../lib/build').default({
+      cwd,
+      watch: true,
+      package: false,
+    });
+    break;
   default:
     signale.error(`Unknown command ${args._}`);
     break;

@@ -42,6 +42,7 @@ export interface IConfig {
   entry?: string;
   outputExports?: 'default' | 'named' | 'none' | 'auto';
   alias?: Record<string, string>;
+  dev?: BundleType;
 }
 
 export type BundleType = 'esm' | 'cjs' | 'umd';

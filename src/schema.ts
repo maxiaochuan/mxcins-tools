@@ -51,5 +51,6 @@ export default {
     runtimeHelpers: { type: 'boolean' },
     namedExports: { type: 'string' },
     outputExports: { type: 'string' },
+    dev: { type: 'string' },
   },
 };

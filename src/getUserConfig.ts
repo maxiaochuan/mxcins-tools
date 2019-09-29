@@ -1,15 +1,18 @@
 // const Ajv = require('ajv');
 import Ajv from 'ajv';
 import { join } from 'path';
+import Debug from 'debug';
 import { EXTENSIONS, CONFIG_FILES } from './const';
 import { getExistPath, ConfigError } from './utils';
-import { IConfig, IPackageJSON, IRequiredConfig } from './types';
+import { IConfig, IPackageJSON, IRequiredConfig, BundleType } from './types';
 import schema from './schema';
+
+const debug = Debug('mxcins-tools:getUserConfig');
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const d = <T>(o: any): T => o.default || o;
 
-export const getUserConfig = (cwd: string, pkg: IPackageJSON): IRequiredConfig => {
+export const getUserConfig = (cwd: string, pkg: IPackageJSON, watch?: boolean): IRequiredConfig => {
   const path = getExistPath(cwd, CONFIG_FILES);
   if (!path) {
     throw new ConfigError('Config file is not exist, skip project!\n\n', [pkg.name, 'UserConfig']);
@@ -49,7 +52,12 @@ export const getUserConfig = (cwd: string, pkg: IPackageJSON): IRequiredConfig =
     ]);
   }
 
-  return {
+  const hasCjs = !!conf.cjs;
+  const hasUmd = !!conf.umd;
+
+  const dev: BundleType = conf.dev || hasUmd ? 'umd' : hasCjs ? 'cjs' : 'esm';
+
+  const ret: IRequiredConfig = {
     ...conf,
     esm:
       typeof conf.esm === 'boolean'
@@ -65,4 +73,18 @@ export const getUserConfig = (cwd: string, pkg: IPackageJSON): IRequiredConfig =
         : conf.cjs,
     umd: conf.umd ? { type: 'single', ...conf.umd } : undefined,
   };
+
+  debug('user config:\n%O', ret);
+
+  if (watch && dev) {
+    return ['esm', 'cjs', 'umd'].filter(t => t!== dev).reduce((prev, t) => {
+      delete (prev as any)[t];
+      return prev;
+    }, {
+      ...ret,
+      [dev]: ret[dev],
+    })
+  }
+
+  return ret;
 };

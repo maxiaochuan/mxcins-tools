@@ -1,14 +1,14 @@
 import { join } from 'path';
 import signale from 'signale';
 import assert from 'assert';
-import { readdirSync, existsSync, createReadStream, createWriteStream } from 'fs';
-import rimraf from 'rimraf';
+import { readdirSync, existsSync } from 'fs';
 import { getUserConfig } from './getUserConfig';
 import { IPackageJSON, IBuildOpts, IOutput } from './types';
 
 import rollup from './rollup';
 import gulp from './gulp';
 import updatePackageJSON from './package';
+import { generateTsConfig } from './utils';
 
 /**
  *
@@ -21,7 +21,8 @@ const build = async (opts: IBuildOpts) => {
     /**
      * get config
      */
-    const conf = getUserConfig(opts.cwd, pkg);
+    const conf = getUserConfig(opts.cwd, pkg, watch);
+    generateTsConfig(cwd);
 
     if (conf.esm) {
       if (conf.esm.type === 'single') {
@@ -62,7 +63,6 @@ const build = async (opts: IBuildOpts) => {
 async function buildForLerna(opts: IBuildOpts) {
   // const { cwd } = opts;
   try {
-    const isTs = existsSync(join(opts.cwd, 'tsconfig.json'));
     const pkgs = readdirSync(join(opts.cwd, 'packages'));
     // eslint-disable-next-line no-restricted-syntax
     for (const pkg of pkgs) {
@@ -72,20 +72,6 @@ async function buildForLerna(opts: IBuildOpts) {
         `package.json not found in packages/${pkg}`,
       );
       process.chdir(pkgPath);
-      if (isTs && !existsSync(join(pkgPath, 'tsconfig.json'))) {
-        createReadStream(join(opts.cwd, 'tsconfig.json')).pipe(
-          createWriteStream(join(pkgPath, 'tsconfig.json')),
-        );
-        (() => {
-          process.on('SIGINT', () => {
-            process.exit();
-          });
-          process.on('exit', () => {
-            signale.scope('EXIT').note('exit: rm tsconfig.json');
-            rimraf.sync(join(pkgPath, 'tsconfig.json'));
-          });
-        })();
-      }
       // eslint-disable-next-line no-await-in-loop
       await build({
         ...opts,
