@@ -32,8 +32,10 @@ export const getBabelConfig = (opts: IGetBabelConfigOpts) => {
       [require.resolve('@babel/plugin-proposal-class-properties'), { loose: true }],
       ...(runtimeHelpers
         ? [
-            require.resolve('@babel/plugin-transform-runtime'),
-            { useESModules: isBrowser && type === 'esm' },
+            [
+              require.resolve('@babel/plugin-transform-runtime'),
+              { useESModules: isBrowser && type === 'esm' },
+            ],
           ]
         : []),
     ],

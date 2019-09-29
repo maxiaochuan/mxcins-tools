@@ -37,14 +37,14 @@ const gExternal = (pkg: IPackageJSON, rh?: boolean): IsExternal => {
 
 export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
   const { cwd, entry, type, isTs, conf, pkg } = opts;
-  const { esm, cjs, umd, target = 'browser', alias: confAlias } = conf;
+  const { esm, cjs, umd, target = 'browser', alias: confAlias, outputExports } = conf;
 
   const runtimeHelpers = type === 'cjs' ? false : conf.runtimeHelpers;
 
   const babelConfig = {
     ...getBabelConfig({
       type,
-      target: type === 'esm' ? 'browser' : target,
+      target: type === 'cjs' ? 'node' : target,
       typescript: isTs,
       runtimeHelpers,
     }),
@@ -79,6 +79,7 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
             tsconfig: join(opts.cwd, 'tsconfig.json'),
             tsconfigDefaults: {
               compilerOptions: {
+                allowSyntheticDefaultImports: true,
                 declaration: true,
               },
             },
@@ -113,6 +114,7 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
         plugins,
         output: {
           file: join(cwd, 'dist', `${(cjs && cjs.file) || `${name}.cjs`}.js`),
+          exports: outputExports,
           format,
         },
       };
@@ -120,7 +122,6 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
       plugins.push(
         commonjs({
           include: /node_modules/,
-          // namedExports,
         }),
       );
       return {
@@ -149,10 +150,11 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
            */
           ...Object.keys((umd && umd.globals) || {}),
         ],
+        plugins,
         output: {
           file: join(cwd, 'dist', `${(cjs && cjs.file) || `${name}.umd`}.js`),
           format,
-          // exports: conf.outputExports,
+          exports: outputExports,
           globals: (conf.umd as IUMD).globals,
           name: conf.umd && conf.umd.name,
         },

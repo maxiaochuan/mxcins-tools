@@ -40,7 +40,7 @@ export interface IConfig {
   target?: 'browser' | 'node';
   // for rollup
   entry?: string;
-  namedExports: 'default' | 'named' | 'none' | 'auto';
+  outputExports?: 'default' | 'named' | 'none' | 'auto';
   alias?: Record<string, string>;
 }
 
