@@ -107,7 +107,7 @@ async function copyAssets(source: string[], targetDir: string) {
 }
 
 const forESM = async (src: string[], targetDir: string, conf: IRequiredConfig, isTs: boolean) => {
-  await transform(src, targetDir, 'esm', conf, isTs);
+  await transform(src, targetDir, 'esm', conf, isTs, 'browser');
   await buildLess(src, targetDir);
   await copyAssets(src, targetDir);
 };
