@@ -26,7 +26,7 @@ const gExternal = (pkg: IPackageJSON, rh?: boolean): IsExternal => {
   const names = [
     ...Object.keys(pkg.dependencies || {}),
     ...Object.keys(pkg.peerDependencies || {}),
-  ].map(n => new RegExp(`^${n}$`));
+  ].map(n => new RegExp(`^${n}`));
 
   if (rh) {
     names.push(/^@babel\/runtime/);
