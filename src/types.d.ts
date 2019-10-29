@@ -17,7 +17,7 @@ export interface IPackageJSON {
   peerDependencies?: Record<string, string>;
   main?: string;
   ['umd:main']?: string;
-  unpkg: string;
+  unpkg?: string;
   module?: string;
   source?: string;
   ['jsnext:main']?: string;
@@ -43,6 +43,7 @@ export interface IConfig {
   outputExports?: 'default' | 'named' | 'none' | 'auto';
   alias?: Record<string, string>;
   dev?: BundleType;
+  doc?: any;
 }
 
 export type BundleType = 'esm' | 'cjs' | 'umd';

@@ -52,5 +52,6 @@ export default {
     namedExports: { type: 'string' },
     outputExports: { type: 'string' },
     dev: { type: 'string' },
+    doc: { type: 'string' },
   },
 };

@@ -38,7 +38,7 @@ export const getEntryPath = (cwd: string, paths: string[]) => {
 export function generateTsConfig(cwd: string) {
   const tsConfigPath = getExistPath(cwd, ['tsconfig.json']);
   if (tsConfigPath) {
-    return false;
+    return true;
   }
 
   let currentPath = cwd;

@@ -72,6 +72,7 @@ export const getUserConfig = (cwd: string, pkg: IPackageJSON, watch?: boolean): 
         ? { type: conf.cjs }
         : conf.cjs,
     umd: conf.umd ? { type: 'single', ...conf.umd } : undefined,
+    doc: conf.doc,
   };
 
   debug('user config:\n%O', ret);

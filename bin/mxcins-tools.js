@@ -19,6 +19,8 @@ if (args.version) {
 const cwd = process.cwd();
 const { watch, package } = args;
 
+console.log('args', args._[0]);
+
 switch (args._[0]) {
   case 'build':
     require('../lib/build').default({
@@ -33,6 +35,11 @@ switch (args._[0]) {
       watch: true,
       package: false,
     });
+    break;
+  case 'doc':
+    require('../lib/doc').default({
+      cwd,
+    })
     break;
   default:
     signale.error(`Unknown command ${args._}`);
