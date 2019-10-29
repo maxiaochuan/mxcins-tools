@@ -19,8 +19,6 @@ if (args.version) {
 const cwd = process.cwd();
 const { watch, package } = args;
 
-console.log('args', args._[0]);
-
 switch (args._[0]) {
   case 'build':
     require('../lib/build').default({
