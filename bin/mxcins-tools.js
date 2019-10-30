@@ -35,7 +35,7 @@ switch (args._[0]) {
     });
     break;
   case 'doc':
-    require('../lib/doc').default({
+    require('../lib/docz').default({
       cwd,
     })
     break;
