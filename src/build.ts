@@ -9,7 +9,7 @@ import { IPackageJSON, IBuildOpts, IOutput } from './types';
 import rollup from './rollup';
 import gulp from './gulp';
 import updatePackageJSON from './package';
-import { generateTsConfig } from './utils';
+// import { generateTsConfig } from './utils';
 
 /**
  *
@@ -23,7 +23,7 @@ const build = async (opts: IBuildOpts) => {
      * get config
      */
     const conf = getUserConfig(cwd, pkg, watch);
-    generateTsConfig(cwd);
+    // generateTsConfig(cwd);
     rimraf.sync(join(cwd, 'dist'));
 
 
