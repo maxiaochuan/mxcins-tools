@@ -71,7 +71,7 @@ export const getRollupConfig = (opts: IGetRollupConfigOpts): RollupOptions => {
       : []),
     nodeResolve({
       mainFields: ['jsnext:main', 'browser', 'module', 'main'],
-      dedupe: [ 'react', 'react-dom' ],
+      dedupe: ['react', 'react-dom'],
     }),
     ...(isTs
       ? [

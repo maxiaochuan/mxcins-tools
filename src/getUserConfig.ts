@@ -78,13 +78,18 @@ export const getUserConfig = (cwd: string, pkg: IPackageJSON, watch?: boolean): 
   debug('user config:\n%O', ret);
 
   if (watch && dev) {
-    return ['esm', 'cjs', 'umd'].filter(t => t!== dev).reduce((prev, t) => {
-      delete (prev as any)[t];
-      return prev;
-    }, {
-      ...ret,
-      [dev]: ret[dev],
-    })
+    return ['esm', 'cjs', 'umd']
+      .filter(t => t !== dev)
+      .reduce(
+        (prev, t) => {
+          delete (prev as any)[t];
+          return prev;
+        },
+        {
+          ...ret,
+          [dev]: ret[dev],
+        },
+      );
   }
 
   return ret;

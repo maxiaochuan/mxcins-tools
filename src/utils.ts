@@ -13,7 +13,6 @@ export class ConfigError extends Error {
   }
 }
 
-
 export const getExistPath = (cwd: string, paths: string[], opts: { relative?: boolean } = {}) => {
   const exists: { absolute: string; relative: string }[] = [];
   paths.forEach(path => {

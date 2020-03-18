@@ -11,11 +11,7 @@ export default async ({ cwd }: IBuildOpts) => {
   mkdirp.sync(join(cwd, '.docz'));
   generateTsConfig(cwd);
   const bin = require.resolve('docz/bin/index.js');
-  const params = [
-    '--dest', DOC_PATH,
-    '--config', join(__dirname, 'doczrc.js'),
-  ];
-
+  const params = ['--dest', DOC_PATH, '--config', join(__dirname, 'doczrc.js')];
 
   return new Promise((resolve, reject) => {
     const child = fork(bin, ['dev', ...params], {
@@ -30,4 +26,4 @@ export default async ({ cwd }: IBuildOpts) => {
       }
     });
   });
-}
+};

@@ -37,7 +37,7 @@ switch (args._[0]) {
   case 'doc':
     require('../lib/docz').default({
       cwd,
-    })
+    });
     break;
   default:
     signale.error(`Unknown command ${args._}`);

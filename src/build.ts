@@ -26,7 +26,6 @@ const build = async (opts: IBuildOpts) => {
     // generateTsConfig(cwd);
     rimraf.sync(join(cwd, 'dist'));
 
-
     if (conf.esm) {
       if (conf.esm.type === 'single') {
         output.esm = await rollup({ cwd, type: 'esm', conf, pkg, watch });
